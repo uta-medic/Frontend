@@ -182,3 +182,181 @@
     border-right-color: var(--border);
   }
 }
+#----------------------------------
+.consent-screen {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.consent-screen label {
+  display: block;
+  margin: 1rem 0;
+}
+
+.call-status {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+#------------------
+
+.precall-form, .waiting-room, .doctor-dashboard {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.patient-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+#-------------------
+
+.in-call-chat {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.chat-toggle {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.chat-empty {
+  color: #999;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.chat-bubble {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  max-width: 80%;
+}
+
+.chat-bubble.own {
+  background: #dcf8c6;
+  margin-left: auto;
+}
+
+.chat-bubble.other {
+  background: #f1f0f0;
+}
+
+.chat-sender {
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: block;
+}
+
+.chat-input-row {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+
+.chat-input-row input {
+  flex: 1;
+  border: none;
+  padding: 0.5rem;
+}
+
+.chat-input-row button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #075e54;
+  color: white;
+  cursor: pointer;
+}
+
+#----------------
+
+.contact-fab {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 30px;
+  border: none;
+  background: #075e54;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.contact-widget {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 300px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #075e54;
+  color: white;
+}
+
+.contact-header button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.contact-menu, .contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.contact-chat {
+  display: flex;
+  flex-direction: column;
+  height: 320px;
+}
