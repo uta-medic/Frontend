@@ -192,26 +192,52 @@ export default function VideoCall() {
   // ---- Pantallas ----
 
   if (phase === 'form') {
-    return (
-      <div className="precall-form">
-        <h2>Antes de la consulta</h2>
-        <label>
-          Soy: {' '}
-          <select value={role} onChange={(e) => setRole(e.target.value as 'doctor' | 'paciente')}>
-            <option value="paciente">Paciente</option>
-            <option value="doctor">Doctor</option>
-          </select>
-        </label>
-        <input placeholder="Nombre completo" value={name} onChange={(e) => setName(e.target.value)} />
-        <input placeholder="CI" value={ci} onChange={(e) => setCi(e.target.value)} />
-        <label>
-          <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-          {' '}Acepto iniciar la videoconsulta
-        </label>
-        <button onClick={submitForm}>Continuar</button>
+  return (
+    <div className="precall-form">
+      <h2>Antes de la consulta</h2>
+      
+      <div className="form-group">
+        <label>Soy:</label>
+        <select value={role} onChange={(e) => setRole(e.target.value as 'doctor' | 'paciente')}>
+          <option value="paciente">Paciente</option>
+          <option value="doctor">Doctor</option>
+        </select>
       </div>
-    );
-  }
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Nombre completo</label>
+          <input 
+            type="text" 
+            placeholder="Escribe tu nombre" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+          />
+        </div>
+        <div className="form-group">
+          <label>CI</label>
+          <input 
+            type="text" 
+            placeholder="Número de carnet" 
+            value={ci} 
+            onChange={(e) => setCi(e.target.value)} 
+          />
+        </div>
+      </div>
+
+      <div className="checkbox-group">
+        <input 
+          type="checkbox" 
+          checked={consent} 
+          onChange={(e) => setConsent(e.target.checked)} 
+        />
+        <label>Acepto iniciar la videoconsulta</label>
+      </div>
+
+      <button onClick={submitForm}>Continuar</button>
+    </div>
+  );
+}
 
   if (phase === 'waiting') {
     return (
