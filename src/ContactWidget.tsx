@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const SIGNALING_URL = 'https://prewar-crate-demise.ngrok-free.dev'; // misma URL que usas en VideoCall
-const WHATSAPP_NUMBER = '59171234567'; // reemplaza por el número real, sin + ni espacios
+const SIGNALING_URL = import.meta.env.VITE_SIGNALING_URL || 'http://localhost:3000';
+//const SIGNALING_URL = 'https://prewar-crate-demise.ngrok-free.dev'; // misma URL que usas en VideoCall
+const WHATSAPP_NUMBER = '59177249737'; // reemplaza por el número real, sin + ni espacios
 
 type WidgetState = 'closed' | 'menu' | 'chat-form' | 'chat-active';
 
