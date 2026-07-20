@@ -64,7 +64,6 @@ describe('copiloto clínico para médicos', () => {
     render(
       <MemoryRouter
         initialEntries={['/medico/copiloto']}
-        future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
       >
         <Routes>
           <Route

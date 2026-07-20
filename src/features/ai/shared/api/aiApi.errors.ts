@@ -2,13 +2,18 @@ import axios from 'axios';
 import type { AiErrorCode } from '../types/ai.types';
 
 export class AiApiError extends Error {
+  public readonly code: AiErrorCode;
+  public readonly status?: number;
+
   constructor(
     message: string,
-    public readonly code: AiErrorCode = 'general',
-    public readonly status?: number,
+    code: AiErrorCode = 'general',
+    status?: number,
   ) {
     super(message);
     this.name = 'AiApiError';
+    this.code = code;
+    this.status = status;
   }
 }
 
