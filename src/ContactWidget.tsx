@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 const SIGNALING_URL = import.meta.env.VITE_SIGNALING_URL || 'http://localhost:3000';
-//const SIGNALING_URL = 'https://prewar-crate-demise.ngrok-free.dev'; // misma URL que usas en VideoCall
 const WHATSAPP_NUMBER = '59177249737'; // reemplaza por el número real, sin + ni espacios
 
 type WidgetState = 'closed' | 'menu' | 'chat-form' | 'chat-active';
@@ -35,7 +34,6 @@ export default function ContactWidget() {
   }
 
   function goToVideoCall() {
-    // Redirige al flujo de videoconsulta ya existente (ajusta la ruta según tu router)
     window.location.href = `/consulta?room=${crypto.randomUUID()}`;
   }
 
@@ -86,46 +84,57 @@ export default function ContactWidget() {
 
   return (
     <div className="contact-widget">
-      <div className="contact-header">
-        <span>Uta-Medic</span>
+      <div className="widget-header">
+        <h4>Uta-Medic</h4>
         <button onClick={closeWidget}>✕</button>
       </div>
 
-      {state === 'menu' && (
-        <div className="contact-menu">
-          <button onClick={goToVideoCall}>🎥 Iniciar videoconsulta</button>
-          <button onClick={() => setState('chat-form')}>💬 Chat con nosotros</button>
-          <button onClick={openWhatsApp}>🟢 WhatsApp directo</button>
-        </div>
-      )}
-
-      {state === 'chat-form' && (
-        <div className="contact-form">
-          <input placeholder="Nombre completo" value={name} onChange={(e) => setName(e.target.value)} />
-          <input placeholder="CI" value={ci} onChange={(e) => setCi(e.target.value)} />
-          <input placeholder="Teléfono" value={phone} onChange={(e) => setPhone(e.target.value)} />
-          <button onClick={startChat}>Iniciar chat</button>
-        </div>
-      )}
-
-      {state === 'chat-active' && (
-        <div className="contact-chat">
-          <div className="chat-messages">
-            {messages.length === 0 && <p className="chat-empty">Escríbenos, te responderemos pronto.</p>}
-            {messages.map((msg, i) => (
-              <div key={i} className={`chat-bubble ${msg.own ? 'own' : 'other'}`}>
-                <span className="chat-sender">{msg.own ? 'Tú' : msg.sender}</span>
-                <p>{msg.text}</p>
-              </div>
-            ))}
-            <div ref={bottomRef} />
+      <div className="widget-body">
+        {state === 'menu' && (
+          <div className="widget-menu">
+            <button className="menu-option" onClick={goToVideoCall}>
+              <span className="menu-icon">🎥</span>
+              <span>Iniciar videoconsulta</span>
+            </button>
+            <button className="menu-option" onClick={() => setState('chat-form')}>
+              <span className="menu-icon">💬</span>
+              <span>Chat con nosotros</span>
+            </button>
+            <button className="menu-option" onClick={openWhatsApp}>
+              <span className="menu-icon dot-online">🟢</span>
+              <span>WhatsApp directo</span>
+            </button>
           </div>
-          <div className="chat-input-row">
-            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="Escribe un mensaje..." />
-            <button onClick={sendMessage}>Enviar</button>
+        )}
+
+        {state === 'chat-form' && (
+          <div className="widget-form">
+            <input placeholder="Nombre completo" value={name} onChange={(e) => setName(e.target.value)} />
+            <input placeholder="CI" value={ci} onChange={(e) => setCi(e.target.value)} />
+            <input placeholder="Teléfono" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <button className="widget-submit" onClick={startChat}>Iniciar chat</button>
           </div>
-        </div>
-      )}
+        )}
+
+        {state === 'chat-active' && (
+          <div className="widget-chat">
+            <div className="widget-chat-messages">
+              {messages.length === 0 && <p className="widget-chat-empty">Escríbenos, te responderemos pronto.</p>}
+              {messages.map((msg, i) => (
+                <div key={i} className={`widget-bubble ${msg.own ? 'own' : 'other'}`}>
+                  <span className="widget-bubble-sender">{msg.own ? 'Tú' : msg.sender}</span>
+                  <p>{msg.text}</p>
+                </div>
+              ))}
+              <div ref={bottomRef} />
+            </div>
+            <div className="widget-chat-input">
+              <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="Escribe un mensaje..." />
+              <button onClick={sendMessage}>Enviar</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
