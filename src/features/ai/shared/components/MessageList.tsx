@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import type { ChatMessage } from '../types/ai.types';
+import { MarkdownMessage } from './MarkdownMessage';
 import { StructuredResponse } from './StructuredResponse';
 
 interface MessageListProps {
@@ -71,7 +72,11 @@ export function MessageList({
                     {formatMessageTime(message.createdAt)}
                   </time>
                 </div>
-                <p className="message__text">{message.content}</p>
+                {message.role === 'assistant' ? (
+                  <MarkdownMessage content={message.content} />
+                ) : (
+                  <p className="message__text">{message.content}</p>
+                )}
                 {message.role === 'assistant' && (
                   <StructuredResponse message={message} onAction={onAction} />
                 )}

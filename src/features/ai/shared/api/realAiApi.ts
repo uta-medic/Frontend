@@ -18,18 +18,19 @@ interface AiChatResponse {
   message: AssistantChatMessage;
 }
 
+interface UserAiChatResponse {
+  answer: string;
+  generatedAt: string;
+  disclaimer?: string;
+}
+
 interface ConversationMessagesResponse {
   messages: ChatMessage[];
 }
 
-// CONTRATO PROPUESTO Y NO VERIFICADO. El backend NestJS auditado todavía no
-// implementa estas rutas. La baseURL ya contiene /api/v1.
+// La baseURL ya contiene /api/v1.
 const proposedUserPaths = {
-  conversations: '/ai/user/conversations',
-  conversation: (conversationId: string) =>
-    `/ai/user/conversations/${encodeURIComponent(conversationId)}`,
-  messages: (conversationId: string) =>
-    `/ai/user/conversations/${encodeURIComponent(conversationId)}/messages`,
+  chat: '/user-ai/chat',
 };
 
 // CONTRATO PROPUESTO Y NO VERIFICADO para el copiloto clínico.
@@ -59,6 +60,44 @@ function isAssistantMessage(value: unknown): value is AssistantChatMessage {
   );
 }
 
+function isUserAiChatResponse(value: unknown): value is UserAiChatResponse {
+  return (
+    isRecord(value) &&
+    typeof value.answer === 'string' &&
+    typeof value.generatedAt === 'string'
+  );
+}
+
+function createAssistantMessageFromUserResponse(
+  data: UserAiChatResponse,
+): AssistantChatMessage {
+  const content = data.disclaimer
+    ? `${data.answer}\n\n**Aviso:** ${data.disclaimer}`
+    : data.answer;
+
+  return {
+    id: `user-ai-${data.generatedAt}-${Math.random().toString(16).slice(2)}`,
+    role: 'assistant',
+    content,
+    responseType: 'general',
+    createdAt: data.generatedAt,
+  };
+}
+
+function formatLocation(context: SendMessageInput['context']) {
+  if (!context) return undefined;
+
+  if (context.manualZone) {
+    return context.manualZone;
+  }
+
+  if (context.location) {
+    return `${context.location.latitude}, ${context.location.longitude}`;
+  }
+
+  return undefined;
+}
+
 function readConversationId(value: unknown) {
   if (!isRecord(value) || typeof value.conversationId !== 'string') {
     throw new AiApiError(
@@ -68,19 +107,6 @@ function readConversationId(value: unknown) {
   }
 
   return value.conversationId;
-}
-
-async function createUserConversation(
-  input: SendMessageInput,
-  signal?: AbortSignal,
-) {
-  const { data } = await httpClient.post<ConversationResponse>(
-    proposedUserPaths.conversations,
-    { context: input.context },
-    { signal },
-  );
-
-  return readConversationId(data);
 }
 
 async function createDoctorConversation(
@@ -160,33 +186,35 @@ export const realAiApi: AiApiProvider = {
       }
 
       const conversationId =
-        input.conversationId ??
-        (await createUserConversation(input, options?.signal));
-      const { data } = await httpClient.post<AiChatResponse>(
-        proposedUserPaths.messages(conversationId),
-        { message: input.message, context: input.context },
+        input.conversationId ?? `user-ai-conversation-${Date.now()}`;
+      const { data } = await httpClient.post<UserAiChatResponse>(
+        proposedUserPaths.chat,
+        { message: input.message, location: formatLocation(input.context) },
         { signal: options?.signal },
       );
 
-      if (!isAssistantMessage(data.message)) {
+      if (!isUserAiChatResponse(data)) {
         throw new AiApiError(
           'El backend devolvió una respuesta de IA inválida.',
           'invalid-response',
         );
       }
 
-      return { conversationId, message: data.message };
+      return {
+        conversationId,
+        message: createAssistantMessageFromUserResponse(data),
+      };
     } catch (error) {
       throw toAiApiError(error);
     }
   },
 
   async getConversationMessages(input, options) {
+    if (input.agent === 'user') return [];
+
     try {
       const { data } = await httpClient.get<ConversationMessagesResponse>(
-        input.agent === 'doctor'
-          ? proposedDoctorPaths.messages(input.conversationId)
-          : proposedUserPaths.messages(input.conversationId),
+        proposedDoctorPaths.messages(input.conversationId),
         { signal: options?.signal },
       );
 
@@ -196,16 +224,8 @@ export const realAiApi: AiApiProvider = {
     }
   },
 
-  async deleteConversation(input, options) {
-    if (input.agent !== 'user') return;
-
-    try {
-      await httpClient.delete(proposedUserPaths.conversation(input.conversationId), {
-        signal: options?.signal,
-      });
-    } catch (error) {
-      throw toAiApiError(error);
-    }
+  async deleteConversation(input) {
+    if (input.agent === 'user') return;
   },
 
   async generateClinicalSummary(input, options) {

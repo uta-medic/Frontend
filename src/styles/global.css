@@ -472,6 +472,48 @@ a {
   overflow-wrap: anywhere;
 }
 
+.message__markdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  white-space: normal;
+}
+
+.message__markdown p,
+.message__markdown h2,
+.message__markdown h3,
+.message__markdown ul,
+.message__markdown ol {
+  margin: 0;
+}
+
+.message__markdown h2,
+.message__markdown h3 {
+  color: #143f3b;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.message__markdown ul,
+.message__markdown ol {
+  padding-left: 20px;
+}
+
+.message__markdown li + li {
+  margin-top: 6px;
+}
+
+.message__markdown a {
+  color: #076b63;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.message__markdown strong {
+  color: #153f3a;
+}
+
 .message--user {
   margin-left: auto;
 }
