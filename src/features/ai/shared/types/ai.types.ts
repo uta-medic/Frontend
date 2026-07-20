@@ -237,6 +237,12 @@ export interface DemoPatient {
   displayName: string;
   age: number;
   sex?: string;
+  bloodType?: string;
+  documentCode?: string;
+  phone?: string;
+  assignedAt?: string;
+  lastEncounterStatus?: string;
+  lastEncounterAt?: string;
   currentHospital: string;
   chiefComplaint: string;
   symptoms: string[];

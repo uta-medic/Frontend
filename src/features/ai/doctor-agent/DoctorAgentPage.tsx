@@ -49,6 +49,23 @@ export function DoctorAgentPage() {
 
         <SafetyNotice emphasis>{DOCTOR_SAFETY_NOTICE}</SafetyNotice>
 
+        {copilot.patientsLoading && (
+          <div className="doctor-patients-empty" role="status">
+            Cargando pacientes asignados…
+          </div>
+        )}
+
+        {copilot.patientsError && (
+          <ErrorState error={copilot.patientsError} onRetry={copilot.retryPatients} />
+        )}
+
+        {copilot.patientsLoaded && copilot.patients.length === 0 && (
+          <div className="doctor-patients-empty" role="status">
+            No hay pacientes activos asignados a este doctor.
+          </div>
+        )}
+
+        {copilot.selectedPatient && (
         <div className="doctor-workspace">
           <PatientContextPanel
             patient={copilot.selectedPatient}
@@ -103,6 +120,7 @@ export function DoctorAgentPage() {
             )}
           </div>
         </div>
+        )}
       </main>
     </div>
   );

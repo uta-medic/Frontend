@@ -14,10 +14,12 @@ export function PatientContextPanel({
 }: PatientContextPanelProps) {
   return (
     <aside className="patient-context-panel" aria-labelledby="patient-context-title">
-      <div className="demo-data-label">Datos ficticios de demostración</div>
-      <label htmlFor="demo-patient">Paciente demo autorizado para esta sesión</label>
+      <div className="patient-count-label">
+        {patients.length} {patients.length === 1 ? 'paciente asignado' : 'pacientes asignados'}
+      </div>
+      <label htmlFor="doctor-patient">Paciente autorizado para este doctor</label>
       <select
-        id="demo-patient"
+        id="doctor-patient"
         value={patient.patientId}
         onChange={(event) => void onPatientChange(event.target.value)}
       >
@@ -39,8 +41,11 @@ export function PatientContextPanel({
 
       <dl className="patient-facts">
         <div><dt>Sexo</dt><dd>{patient.sex ?? 'No disponible'}</dd></div>
-        <div><dt>Hospital actual</dt><dd>{patient.currentHospital}</dd></div>
-        <div><dt>Motivo de consulta</dt><dd>{patient.chiefComplaint}</dd></div>
+        <div><dt>Tipo de sangre</dt><dd>{patient.bloodType ?? 'No disponible'}</dd></div>
+        <div><dt>Documento</dt><dd>{patient.documentCode ?? 'No disponible'}</dd></div>
+        <div><dt>Teléfono</dt><dd>{patient.phone ?? 'No disponible'}</dd></div>
+        <div><dt>Última consulta</dt><dd>{patient.chiefComplaint}</dd></div>
+        <div><dt>Estado</dt><dd>{patient.lastEncounterStatus ?? 'No disponible'}</dd></div>
       </dl>
 
       <ClinicalRecordSections {...patient} />

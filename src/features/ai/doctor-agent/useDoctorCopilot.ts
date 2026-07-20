@@ -1,15 +1,16 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createAiApiProvider } from '../shared/api/aiApi';
 import { AiApiError } from '../shared/api/aiApi.errors';
 import { useAiChat } from '../shared/hooks/useAiChat';
 import type {
   ClinicalDifferentialResult,
   ClinicalSummary,
+  DemoPatient,
   DifferentialRequest,
 } from '../shared/types/ai.types';
 import type { DoctorQuickAction } from './doctorAgent.config';
 import { DOCTOR_WELCOME_MESSAGE } from './doctorAgent.config';
-import { DEMO_PATIENTS } from './doctorMockData';
+import { getDoctorPatients } from './doctorPatientsApi';
 
 const aiApi = createAiApiProvider();
 
@@ -18,9 +19,11 @@ type ClinicalRequest =
   | { type: 'differential'; request: DifferentialRequest };
 
 export function useDoctorCopilot() {
-  const [selectedPatientId, setSelectedPatientId] = useState(
-    DEMO_PATIENTS[0].patientId,
-  );
+  const [patients, setPatients] = useState<DemoPatient[]>([]);
+  const [selectedPatientId, setSelectedPatientId] = useState<string>();
+  const [patientsError, setPatientsError] = useState<AiApiError>();
+  const [patientsLoading, setPatientsLoading] = useState(false);
+  const [patientsLoaded, setPatientsLoaded] = useState(false);
   const [summary, setSummary] = useState<ClinicalSummary>();
   const [differential, setDifferential] =
     useState<ClinicalDifferentialResult>();
@@ -29,12 +32,22 @@ export function useDoctorCopilot() {
     'summary' | 'differential'
   >();
   const clinicalController = useRef<AbortController | undefined>(undefined);
+  const patientsController = useRef<AbortController | undefined>(undefined);
   const lastClinicalRequest = useRef<ClinicalRequest | undefined>(undefined);
   const chat = useAiChat('doctor', DOCTOR_WELCOME_MESSAGE);
-  const selectedPatient =
-    DEMO_PATIENTS.find(
-      (patient) => patient.patientId === selectedPatientId,
-    ) ?? DEMO_PATIENTS[0];
+  const cancelChatRequest = chat.cancelRequest;
+  const startNewChatConversation = chat.startNewConversation;
+  const selectedPatient = patients.find(
+    (patient) => patient.patientId === selectedPatientId,
+  );
+
+  useEffect(
+    () => () => {
+      patientsController.current?.abort();
+      clinicalController.current?.abort();
+    },
+    [],
+  );
 
   const cancelClinicalRequest = useCallback(() => {
     clinicalController.current?.abort();
@@ -43,6 +56,8 @@ export function useDoctorCopilot() {
   }, []);
 
   const generateSummary = useCallback(async () => {
+    if (!selectedPatientId) return;
+
     cancelClinicalRequest();
     const controller = new AbortController();
     clinicalController.current = controller;
@@ -74,6 +89,8 @@ export function useDoctorCopilot() {
 
   const generateDifferential = useCallback(
     async (request: DifferentialRequest) => {
+      if (!selectedPatientId) return;
+
       cancelClinicalRequest();
       const controller = new AbortController();
       clinicalController.current = controller;
@@ -116,13 +133,17 @@ export function useDoctorCopilot() {
   }, [generateDifferential, generateSummary]);
 
   const sendDoctorMessage = useCallback(
-    (message: string) =>
-      chat.sendMessage(message, { patientId: selectedPatientId }),
+    (message: string) => {
+      if (!selectedPatientId) return Promise.resolve();
+      return chat.sendMessage(message, { patientId: selectedPatientId });
+    },
     [chat, selectedPatientId],
   );
 
   const runQuickAction = useCallback(
     async (action: DoctorQuickAction) => {
+      if (!selectedPatient) return;
+
       if (action.kind === 'summary') {
         await generateSummary();
         return;
@@ -158,10 +179,60 @@ export function useDoctorCopilot() {
     [cancelClinicalRequest, chat, selectedPatientId],
   );
 
+  const loadPatients = useCallback(
+    async () => {
+      patientsController.current?.abort();
+      cancelClinicalRequest();
+      cancelChatRequest();
+
+      const controller = new AbortController();
+      patientsController.current = controller;
+      setPatientsError(undefined);
+      setPatientsLoading(true);
+      setPatientsLoaded(false);
+      setPatients([]);
+      setSelectedPatientId(undefined);
+      setSummary(undefined);
+      setDifferential(undefined);
+      setClinicalError(undefined);
+
+      try {
+        const nextPatients = await getDoctorPatients(controller.signal);
+        setPatients(nextPatients);
+        setSelectedPatientId(nextPatients[0]?.patientId);
+        setPatientsLoaded(true);
+        await startNewChatConversation();
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === 'AbortError')) {
+          setPatientsError(
+            error instanceof AiApiError
+              ? error
+              : new AiApiError('No se pudo cargar la lista de pacientes.'),
+          );
+        }
+      } finally {
+        if (patientsController.current === controller) {
+          patientsController.current = undefined;
+          setPatientsLoading(false);
+        }
+      }
+    },
+    [cancelChatRequest, cancelClinicalRequest, startNewChatConversation],
+  );
+
+  const retryPatients = useCallback(() => loadPatients(), [loadPatients]);
+
+  useEffect(() => {
+    void loadPatients();
+  }, [loadPatients]);
+
   return {
     selectedPatient,
     selectedPatientId,
-    patients: DEMO_PATIENTS,
+    patients,
+    patientsError,
+    patientsLoading,
+    patientsLoaded,
     summary,
     differential,
     clinicalError,
@@ -170,6 +241,8 @@ export function useDoctorCopilot() {
     chatLoading: chat.isLoading,
     chatError: chat.error,
     changePatient,
+    loadPatients,
+    retryPatients,
     runQuickAction,
     generateDifferential,
     retryClinicalRequest,
