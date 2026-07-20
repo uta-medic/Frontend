@@ -41,7 +41,9 @@ export function DoctorChatPanel({
           isDisabled={!isOnline}
           onSend={onSend}
           onCancel={onCancel}
-          placeholder="Pregunta sobre el contexto clínico demo"
+          placeholder="Pregunta sobre el paciente seleccionado"
+          minLength={5}
+          maxLength={1_000}
         />
       </div>
     </section>

@@ -2,30 +2,25 @@ import { httpClient } from '../../../../config/httpClient';
 import type {
   AiApiProvider,
   AssistantChatMessage,
-  ChatMessage,
   ClinicalDifferentialResult,
   ClinicalSummary,
   SendMessageInput,
 } from '../types/ai.types';
 import { AiApiError, toAiApiError } from './aiApi.errors';
+import { MOCK_DOCTOR_USER_ID } from '../../doctor-agent/doctorAgent.config';
 
-interface ConversationResponse {
-  conversationId: string;
-}
-
-interface AiChatResponse {
-  conversationId?: string;
-  message: AssistantChatMessage;
+interface DoctorAnalyzeResponse {
+  patientId: string;
+  patientName?: string;
+  answer: string;
+  generatedAt: string;
+  disclaimer: string;
 }
 
 interface UserAiChatResponse {
   answer: string;
   generatedAt: string;
   disclaimer?: string;
-}
-
-interface ConversationMessagesResponse {
-  messages: ChatMessage[];
 }
 
 // La baseURL ya contiene /api/v1.
@@ -35,9 +30,7 @@ const proposedUserPaths = {
 
 // CONTRATO PROPUESTO Y NO VERIFICADO para el copiloto clínico.
 const proposedDoctorPaths = {
-  conversations: '/ai/doctor/conversations',
-  messages: (conversationId: string) =>
-    `/ai/doctor/conversations/${encodeURIComponent(conversationId)}/messages`,
+  analyze: '/doctor-ai/analyze',
   summary: (patientId: string) =>
     `/ai/doctor/patients/${encodeURIComponent(patientId)}/summary`,
   differential: (patientId: string) =>
@@ -48,24 +41,38 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-function isAssistantMessage(value: unknown): value is AssistantChatMessage {
-  if (!isRecord(value)) return false;
-
-  return (
-    typeof value.id === 'string' &&
-    value.role === 'assistant' &&
-    typeof value.content === 'string' &&
-    typeof value.createdAt === 'string' &&
-    typeof value.responseType === 'string'
-  );
-}
-
 function isUserAiChatResponse(value: unknown): value is UserAiChatResponse {
   return (
     isRecord(value) &&
     typeof value.answer === 'string' &&
     typeof value.generatedAt === 'string'
   );
+}
+
+function isDoctorAnalyzeResponse(
+  value: unknown,
+): value is DoctorAnalyzeResponse {
+  return (
+    isRecord(value) &&
+    typeof value.patientId === 'string' &&
+    (value.patientName === undefined || typeof value.patientName === 'string') &&
+    typeof value.answer === 'string' &&
+    typeof value.generatedAt === 'string' &&
+    typeof value.disclaimer === 'string'
+  );
+}
+
+function createAssistantMessageFromDoctorResponse(
+  data: DoctorAnalyzeResponse,
+): AssistantChatMessage {
+  return {
+    id: `doctor-ai-${data.generatedAt}-${Math.random().toString(16).slice(2)}`,
+    role: 'assistant',
+    content: `${data.answer}\n\n**Aviso:** ${data.disclaimer}`,
+    responseType: 'general',
+    requiresMedicalEvaluation: true,
+    createdAt: data.generatedAt,
+  };
 }
 
 function createAssistantMessageFromUserResponse(
@@ -96,30 +103,6 @@ function formatLocation(context: SendMessageInput['context']) {
   }
 
   return undefined;
-}
-
-function readConversationId(value: unknown) {
-  if (!isRecord(value) || typeof value.conversationId !== 'string') {
-    throw new AiApiError(
-      'El backend devolvió una conversación inválida.',
-      'invalid-response',
-    );
-  }
-
-  return value.conversationId;
-}
-
-async function createDoctorConversation(
-  input: SendMessageInput,
-  signal?: AbortSignal,
-) {
-  const { data } = await httpClient.post<ConversationResponse>(
-    proposedDoctorPaths.conversations,
-    { patientId: input.context?.patientId },
-    { signal },
-  );
-
-  return readConversationId(data);
 }
 
 function isClinicalSummary(value: unknown): value is ClinicalSummary {
@@ -163,16 +146,20 @@ export const realAiApi: AiApiProvider = {
   async sendMessage(input, options) {
     try {
       if (input.agent === 'doctor') {
-        const conversationId =
-          input.conversationId ??
-          (await createDoctorConversation(input, options?.signal));
-        const { data } = await httpClient.post<AiChatResponse>(
-          proposedDoctorPaths.messages(conversationId),
-          { message: input.message, patientId: input.context?.patientId },
-          { signal: options?.signal },
+        const { data } = await httpClient.post<DoctorAnalyzeResponse>(
+          proposedDoctorPaths.analyze,
+          {
+            patientId: input.context?.patientId,
+            question: input.message,
+          },
+          {
+            headers: { 'x-doctor-user-id': MOCK_DOCTOR_USER_ID },
+            signal: options?.signal,
+            timeout: 90_000,
+          },
         );
 
-        if (!isAssistantMessage(data.message)) {
+        if (!isDoctorAnalyzeResponse(data)) {
           throw new AiApiError(
             'El backend devolvió una respuesta de IA inválida.',
             'invalid-response',
@@ -180,8 +167,9 @@ export const realAiApi: AiApiProvider = {
         }
 
         return {
-          conversationId,
-          message: data.message,
+          conversationId:
+            input.conversationId ?? `doctor-ai-conversation-${Date.now()}`,
+          message: createAssistantMessageFromDoctorResponse(data),
         };
       }
 
@@ -205,23 +193,17 @@ export const realAiApi: AiApiProvider = {
         message: createAssistantMessageFromUserResponse(data),
       };
     } catch (error) {
+      if (options?.signal?.aborted) {
+        throw new DOMException('Solicitud cancelada', 'AbortError');
+      }
       throw toAiApiError(error);
     }
   },
 
   async getConversationMessages(input, options) {
-    if (input.agent === 'user') return [];
-
-    try {
-      const { data } = await httpClient.get<ConversationMessagesResponse>(
-        proposedDoctorPaths.messages(input.conversationId),
-        { signal: options?.signal },
-      );
-
-      return Array.isArray(data.messages) ? data.messages : [];
-    } catch (error) {
-      throw toAiApiError(error);
-    }
+    void input;
+    void options;
+    return [];
   },
 
   async deleteConversation(input) {

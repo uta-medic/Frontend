@@ -1,6 +1,7 @@
 import { httpClient } from '../../../config/httpClient';
 import { AiApiError, toAiApiError } from '../shared/api/aiApi.errors';
 import type { DemoPatient } from '../shared/types/ai.types';
+import { MOCK_DOCTOR_USER_ID } from './doctorAgent.config';
 
 interface DoctorPatientResponse {
   patientId: string;
@@ -24,8 +25,6 @@ interface DoctorPatientsResponse {
   count: number;
   patients: DoctorPatientResponse[];
 }
-
-const MOCK_DOCTOR_USER_ID = '1fffff44-a958-4367-b046-e10ce34d6432';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;

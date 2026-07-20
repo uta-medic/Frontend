@@ -10,6 +10,8 @@ interface MessageComposerProps {
   onSend: (message: string) => Promise<void>;
   onCancel: () => void;
   placeholder?: string;
+  minLength?: number;
+  maxLength?: number;
 }
 
 export function MessageComposer({
@@ -18,14 +20,22 @@ export function MessageComposer({
   onSend,
   onCancel,
   placeholder = 'Escribe tu consulta aquí…',
+  minLength = 1,
+  maxLength = 2_000,
 }: MessageComposerProps) {
   const [message, setMessage] = useState('');
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!message.trim() || isLoading || isDisabled) return;
+    const normalizedMessage = message.trim();
+    if (
+      normalizedMessage.length < minLength ||
+      normalizedMessage.length > maxLength ||
+      isLoading ||
+      isDisabled
+    ) return;
 
-    const pendingMessage = message;
+    const pendingMessage = normalizedMessage;
     setMessage('');
     await onSend(pendingMessage);
   }
@@ -51,7 +61,8 @@ export function MessageComposer({
         placeholder={placeholder}
         disabled={isDisabled}
         aria-describedby="composer-help"
-        maxLength={2_000}
+        minLength={minLength}
+        maxLength={maxLength}
       />
       <div className="message-composer__actions">
         {isLoading && (
@@ -66,7 +77,12 @@ export function MessageComposer({
         <button
           type="submit"
           className="send-button"
-          disabled={isLoading || isDisabled || !message.trim()}
+          disabled={
+            isLoading ||
+            isDisabled ||
+            message.trim().length < minLength ||
+            message.trim().length > maxLength
+          }
           aria-label="Enviar mensaje"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">

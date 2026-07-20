@@ -1,12 +1,11 @@
-export type DoctorActionKind = 'chat' | 'summary' | 'differential';
-
 export interface DoctorQuickAction {
   id: string;
   label: string;
   shortCode: string;
   prompt: string;
-  kind: DoctorActionKind;
 }
+
+export const MOCK_DOCTOR_USER_ID = '1fffff44-a958-4367-b046-e10ce34d6432';
 
 export const DOCTOR_SAFETY_NOTICE =
   'La IA organiza y sugiere; el médico verifica y decide.';
@@ -15,17 +14,69 @@ export const DOCTOR_DIFFERENTIAL_DISCLAIMER =
   'Estas posibilidades fueron generadas como apoyo informativo. No representan un diagnóstico y requieren anamnesis, examen físico, estudios pertinentes y criterio médico.';
 
 export const DOCTOR_WELCOME_MESSAGE =
-  'Contexto de demostración cargado. Puedo organizar la información disponible, señalar datos faltantes y preparar insumos para revisión profesional.';
+  'Paciente autorizado cargado. Puedo analizar su contexto clínico, resumir hallazgos y preparar insumos para revisión profesional.';
 
 export const DOCTOR_QUICK_ACTIONS: DoctorQuickAction[] = [
-  { id: 'summary', label: 'Generar resumen clínico', shortCode: 'RC', prompt: 'Generar resumen clínico.', kind: 'summary' },
-  { id: 'alerts', label: 'Mostrar alertas', shortCode: 'AL', prompt: 'Mostrar alertas clínicas documentadas.', kind: 'chat' },
-  { id: 'allergies', label: 'Revisar alergias', shortCode: 'AG', prompt: 'Revisar alergias documentadas.', kind: 'chat' },
-  { id: 'medications', label: 'Revisar medicamentos activos', shortCode: 'MA', prompt: 'Revisar medicamentos activos documentados.', kind: 'chat' },
-  { id: 'consultations', label: 'Mostrar consultas recientes', shortCode: 'CR', prompt: 'Mostrar consultas recientes.', kind: 'chat' },
-  { id: 'results', label: 'Mostrar resultados recientes', shortCode: 'LR', prompt: 'Mostrar resultados de laboratorio recientes.', kind: 'chat' },
-  { id: 'missing', label: 'Identificar información faltante', shortCode: 'IF', prompt: 'Identificar información clínica faltante.', kind: 'chat' },
-  { id: 'contradictions', label: 'Detectar contradicciones', shortCode: 'DC', prompt: 'Detectar información contradictoria.', kind: 'chat' },
-  { id: 'questions', label: 'Sugerir preguntas', shortCode: 'PQ', prompt: 'Sugerir preguntas para la consulta.', kind: 'chat' },
-  { id: 'differential', label: 'Posibilidades diferenciales', shortCode: 'PD', prompt: 'Preparar posibilidades diferenciales.', kind: 'differential' },
+  {
+    id: 'summary',
+    label: 'Resumen y diagnósticos diferenciales',
+    shortCode: 'RD',
+    prompt:
+      'Resume los hallazgos principales y sugiere posibles diagnósticos diferenciales.',
+  },
+  {
+    id: 'alerts',
+    label: 'Mostrar alertas',
+    shortCode: 'AL',
+    prompt:
+      'Identifica las alertas clínicas y señales de alarma documentadas para este paciente.',
+  },
+  {
+    id: 'allergies',
+    label: 'Revisar alergias',
+    shortCode: 'AG',
+    prompt:
+      'Resume las alergias documentadas y los datos que deben verificarse.',
+  },
+  {
+    id: 'medications',
+    label: 'Revisar medicamentos activos',
+    shortCode: 'MA',
+    prompt:
+      'Revisa los medicamentos activos documentados e identifica posibles datos faltantes.',
+  },
+  {
+    id: 'consultations',
+    label: 'Mostrar consultas recientes',
+    shortCode: 'CR',
+    prompt: 'Resume las consultas recientes y su relevancia clínica.',
+  },
+  {
+    id: 'results',
+    label: 'Mostrar resultados recientes',
+    shortCode: 'LR',
+    prompt:
+      'Analiza los resultados recientes e identifica valores que requieren revisión.',
+  },
+  {
+    id: 'missing',
+    label: 'Identificar información faltante',
+    shortCode: 'IF',
+    prompt:
+      'Identifica la información clínica faltante necesaria para completar la evaluación.',
+  },
+  {
+    id: 'contradictions',
+    label: 'Detectar contradicciones',
+    shortCode: 'DC',
+    prompt:
+      'Detecta contradicciones o datos clínicos que requieren verificación.',
+  },
+  {
+    id: 'questions',
+    label: 'Sugerir preguntas',
+    shortCode: 'PQ',
+    prompt:
+      'Sugiere preguntas concretas para continuar la consulta de este paciente.',
+  },
 ];

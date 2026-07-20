@@ -143,24 +143,9 @@ export function useDoctorCopilot() {
   const runQuickAction = useCallback(
     async (action: DoctorQuickAction) => {
       if (!selectedPatient) return;
-
-      if (action.kind === 'summary') {
-        await generateSummary();
-        return;
-      }
-
-      if (action.kind === 'differential') {
-        await generateDifferential({
-          chiefComplaint: selectedPatient.chiefComplaint,
-          symptoms: selectedPatient.symptoms,
-          duration: 'Duración pendiente de precisar',
-        });
-        return;
-      }
-
       await sendDoctorMessage(action.prompt);
     },
-    [generateDifferential, generateSummary, selectedPatient, sendDoctorMessage],
+    [selectedPatient, sendDoctorMessage],
   );
 
   const changePatient = useCallback(
