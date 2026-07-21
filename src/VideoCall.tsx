@@ -168,7 +168,7 @@ export default function VideoCall() {
       alert('Debes aceptar para continuar');
       return;
     }
-    // Ya no mandamos name/ci/role: el backend los toma del JWT verificado.
+    console.log('📤 Enviando register-role', { roomId: roomIdRef.current, role: user?.role });
     socketRef.current?.emit('register-role', { roomId: roomIdRef.current });
     setPhase(user?.role === 'doctor' ? 'doctor-idle' : 'waiting');
   }
