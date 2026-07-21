@@ -58,7 +58,8 @@ const patientServices = [
 export function LandingPage() {
   return (
     <div className="landing-page">
-      <header className="landing-header">
+      <div className="landing-intro">
+        <header className="landing-header">
         <Link className="landing-brand" to="/" aria-label="Utamedic, inicio">
           <span className="landing-brand__mark" aria-hidden="true"><span /><span /></span>
           <span>Uta<span>medic</span></span>
@@ -74,9 +75,8 @@ export function LandingPage() {
         <Link className="landing-header__cta" to="/asistente">
           Probar asistente <Icon name="arrow" />
         </Link>
-      </header>
+        </header>
 
-      <main>
         <section className="landing-hero">
           <div className="landing-hero__content">
             <div className="landing-eyebrow"><span><Icon name="sparkles" /></span> Salud digital, simple y cercana</div>
@@ -144,7 +144,9 @@ export function LandingPage() {
             </div>
           </div>
         </section>
+      </div>
 
+      <main>
         <section className="landing-proof" aria-label="Características principales">
           <div><strong>24/7</strong><span>Orientación disponible</span></div>
           <i />
@@ -215,31 +217,20 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="landing-teleconsult__visual" aria-hidden="true">
-            <div className="landing-call-preview">
-              <div className="landing-call-preview__topbar">
-                <span><i /> Consulta en curso</span>
-                <small>UtaMedic</small>
-              </div>
-              <div className="landing-call-preview__stage">
-                <div className="landing-call-preview__doctor">
-                  <span>DM</span>
-                  <strong>Dra. Mariana López</strong>
-                  <small>Medicina general</small>
-                </div>
-                <div className="landing-call-preview__patient"><span>Paciente</span></div>
-              </div>
-              <div className="landing-call-preview__controls">
-                <span>Micrófono</span>
-                <span>Cámara</span>
-                <span className="is-danger">Finalizar</span>
-              </div>
+          <figure className="landing-teleconsult__visual">
+            <div className="landing-teleconsult__image-frame">
+              <img
+                src="/img/img1.png"
+                alt="Videollamada médica de Utamedic con una doctora, controles de llamada y conexión segura"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
-            <div className="landing-call-security">
-              <span>✓</span>
-              <div><strong>Espacio privado</strong><small>Tu consulta está protegida</small></div>
-            </div>
-          </div>
+            <figcaption className="landing-teleconsult__image-note">
+              <span aria-hidden="true">✓</span>
+              <div><strong>Atención sin desplazamientos</strong><small>Desde tu móvil, tablet o computadora</small></div>
+            </figcaption>
+          </figure>
         </section>
 
         <section className="landing-pro" id="profesionales">
