@@ -155,6 +155,35 @@ export function LandingPage() {
           <div><strong>Dos experiencias</strong><span>Para pacientes y profesionales</span></div>
         </section>
 
+        <section className="landing-video" aria-labelledby="landing-video-title">
+          <div className="landing-video__heading">
+            <div>
+              <p className="landing-kicker">Conoce Utamedic</p>
+              <h2 id="landing-video-title">Descubre una nueva forma de cuidar tu salud</h2>
+            </div>
+            <p>
+              Conoce cómo Utamedic acerca la orientación, la gestión clínica y la
+              teleconsulta en una sola experiencia.
+            </p>
+          </div>
+
+          <div className="landing-video__frame">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/1I82foXYVBU?rel=0"
+              title="Conoce Utamedic"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+
+          <div className="landing-video__meta" aria-label="Beneficios de Utamedic">
+            <span><Icon name="shield" /> Información clara y segura</span>
+            <span><Icon name="heart" /> Tecnología para una atención más cercana</span>
+          </div>
+        </section>
+
         <section className="landing-section" id="servicios">
           <div className="landing-section__heading">
             <p className="landing-kicker">Todo en un solo lugar</p>
