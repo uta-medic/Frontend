@@ -1,4 +1,4 @@
-const configuredApiUrl = import.meta.env.VITE_API_URL_GABO as
+const configuredApiUrl = import.meta.env.VITE_API_URL as
   | string
   | undefined;
 
