@@ -89,6 +89,9 @@ export function LandingPage() {
               <Link className="landing-button landing-button--primary" to="/asistente">
                 Hablar con el asistente <Icon name="arrow" />
               </Link>
+              <Link className="landing-button landing-button--ghost" to="/gestion">
+                Entrar a gestión <Icon name="arrow" />
+              </Link>
               <a className="landing-button landing-button--ghost" href="#como-funciona">Conoce cómo funciona</a>
             </div>
             <div className="landing-trust" aria-label="Beneficios del servicio">
