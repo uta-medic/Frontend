@@ -1,10 +1,18 @@
-const configuredApiUrl = import.meta.env.VITE_API_URL as
+const configuredApiUrl = import.meta.env.VITE_API_URL_GABO as
   | string
   | undefined;
 
-export const API_BASE_URL = (
-  configuredApiUrl ?? 'http://localhost:3000/api'
-).replace(/\/+$/, '');
+function normalizeApiUrl(apiUrl: string): string {
+  const normalizedUrl = apiUrl.replace(/\/+$/, '');
+
+  return normalizedUrl.endsWith('/api')
+    ? `${normalizedUrl}/v1`
+    : normalizedUrl;
+}
+
+export const API_BASE_URL = normalizeApiUrl(
+  configuredApiUrl ?? 'http://localhost:3000/api/v1',
+);
 
 interface ApiRequestOptions extends Omit<RequestInit, 'body'> {
   body?: unknown;
