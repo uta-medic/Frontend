@@ -1081,6 +1081,119 @@
   border-bottom: 1px solid var(--tm-line);
 }
 
+.doctor-invitation {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+  padding: 17px;
+  border: 1px solid #cce4de;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f6fcfa, #edf8f5);
+}
+
+.doctor-invitation__heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.doctor-invitation__icon {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  color: white;
+  background: var(--tm-primary);
+  box-shadow: 0 9px 20px rgba(8, 121, 110, 0.2);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.doctor-invitation__heading strong {
+  display: block;
+  color: var(--tm-ink);
+  font-size: 0.76rem;
+}
+
+.doctor-invitation__heading p {
+  margin: 4px 0 0;
+  color: var(--tm-muted);
+  font-size: 0.62rem;
+  line-height: 1.45;
+}
+
+.doctor-invitation__link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+}
+
+.doctor-invitation__link input {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #cfe2de;
+  border-radius: 10px;
+  color: #41625f;
+  background: white;
+  font-size: 0.66rem;
+  outline: none;
+}
+
+.doctor-invitation__link input:focus {
+  border-color: #71b8ab;
+  box-shadow: 0 0 0 3px rgba(8, 121, 110, 0.08);
+}
+
+.doctor-invitation__link button {
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 0.66rem;
+  font-weight: 780;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.doctor-invitation__link button:hover {
+  transform: translateY(-1px);
+}
+
+.doctor-invitation__copy {
+  border: 1px solid #b9d9d2;
+  color: var(--tm-primary-dark);
+  background: white;
+}
+
+.doctor-invitation__copy:hover {
+  border-color: #84bfb4;
+  background: #fbfefd;
+}
+
+.doctor-invitation__share {
+  border: 1px solid var(--tm-primary);
+  color: white;
+  background: var(--tm-primary);
+}
+
+.doctor-invitation__share:hover {
+  background: var(--tm-primary-dark);
+}
+
+.doctor-invitation__feedback {
+  min-height: 16px;
+  margin: -5px 0 0;
+  color: var(--tm-primary);
+  font-size: 0.59rem;
+  font-weight: 680;
+}
+
+.doctor-invitation__feedback.is-error {
+  color: var(--tm-danger);
+}
+
 .patient-card {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
@@ -2282,6 +2395,14 @@
   .precall-identity__verified {
     grid-column: 1 / -1;
     width: max-content;
+  }
+
+  .doctor-invitation__link {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .doctor-invitation__link input {
+    grid-column: 1 / -1;
   }
 
   .waiting-room {

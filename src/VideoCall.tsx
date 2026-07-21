@@ -32,6 +32,7 @@ export default function VideoCall() {
   const [consent, setConsent] = useState(false);
   const [waitingPatient, setWaitingPatient] = useState<{ name: string; ci: string } | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [shareFeedback, setShareFeedback] = useState<'copied' | 'shared' | 'error' | null>(null);
 
   const [micOn, setMicOn] = useState(true);
   const [camOn, setCamOn] = useState(true);
@@ -192,6 +193,57 @@ export default function VideoCall() {
     setPhase('ended');
   }
 
+  function getConsultationUrl() {
+    const url = new URL('/teleconsulta', window.location.origin);
+    url.searchParams.set('room', roomIdRef.current);
+    return url.toString();
+  }
+
+  function fallbackCopy(text: string) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.opacity = '0';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    const copied = document.execCommand('copy');
+    textArea.remove();
+    if (!copied) throw new Error('No se pudo copiar el enlace');
+  }
+
+  async function copyConsultationUrl() {
+    try {
+      const url = getConsultationUrl();
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
+      else fallbackCopy(url);
+      setShareFeedback('copied');
+    } catch {
+      setShareFeedback('error');
+    }
+  }
+
+  async function shareConsultationUrl() {
+    const url = getConsultationUrl();
+
+    if (!navigator.share) {
+      await copyConsultationUrl();
+      return;
+    }
+
+    try {
+      await navigator.share({
+        title: 'Invitación a teleconsulta Utamedic',
+        text: 'Ingresa a la sala virtual de tu teleconsulta mediante este enlace:',
+        url,
+      });
+      setShareFeedback('shared');
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      setShareFeedback('error');
+    }
+  }
+
   // ---- Pantallas ----
 
   if (!user) {
@@ -254,6 +306,28 @@ export default function VideoCall() {
           <div><span className="telemedicine-kicker">Panel médico</span><h2>Pacientes en espera</h2><p>Admite al paciente cuando estés preparado para iniciar.</p></div>
           <span className="consultation-availability"><i /> Disponible</span>
         </header>
+
+        <div className="doctor-invitation">
+          <div className="doctor-invitation__heading">
+            <span className="doctor-invitation__icon" aria-hidden="true">↗</span>
+            <div><strong>Invitar paciente a esta sala</strong><p>Copia o comparte este enlace. Funcionará con el dominio actual de la aplicación.</p></div>
+          </div>
+          <div className="doctor-invitation__link">
+            <input type="text" readOnly value={getConsultationUrl()} aria-label="Enlace de invitación a la teleconsulta" />
+            <button type="button" className="doctor-invitation__copy" onClick={copyConsultationUrl}>
+              {shareFeedback === 'copied' ? 'Copiado' : 'Copiar enlace'}
+            </button>
+            <button type="button" className="doctor-invitation__share" onClick={shareConsultationUrl}>
+              Compartir
+            </button>
+          </div>
+          <p className={`doctor-invitation__feedback ${shareFeedback === 'error' ? 'is-error' : ''}`} role="status" aria-live="polite">
+            {shareFeedback === 'copied' && 'Enlace copiado al portapapeles.'}
+            {shareFeedback === 'shared' && 'Invitación compartida correctamente.'}
+            {shareFeedback === 'error' && 'No se pudo copiar o compartir. Selecciona el enlace manualmente.'}
+          </p>
+        </div>
+
         {waitingPatient ? (
           <div className="patient-card">
             <span className="patient-card__avatar" aria-hidden="true">{waitingPatient.name.trim().charAt(0).toUpperCase()}</span>
