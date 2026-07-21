@@ -1,0 +1,690 @@
+.ticket-management {
+  --primary: #08796e;
+  --primary-dark: #05635b;
+  --primary-light: #dff4ef;
+  --secondary: #32a792;
+  --background: #edf7f5;
+  --surface: #ffffff;
+  --text: #173b3a;
+  --muted: #617b79;
+  --border: #dce9e6;
+  --shadow: 0 15px 42px rgba(23, 76, 72, 0.09);
+  color: var(--text);
+  background:
+    radial-gradient(circle at 92% 2%, rgba(97, 198, 177, 0.18), transparent 27rem),
+    linear-gradient(145deg, #f8fcfb 0%, var(--background) 60%, #e6f3f0 100%);
+}
+
+.ticket-management .app-layout {
+  grid-template-columns: 286px minmax(0, 1fr);
+}
+
+.ticket-management .sidebar {
+  z-index: 40;
+  padding: 25px 18px 20px;
+  background:
+    radial-gradient(circle at 15% 92%, rgba(102, 214, 190, 0.2), transparent 18rem),
+    linear-gradient(165deg, #0a7268 0%, #095d56 48%, #153f3c 100%);
+  box-shadow: 12px 0 40px rgba(15, 73, 67, 0.12);
+}
+
+.ticket-management .management-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 10px 25px;
+  color: white;
+  text-decoration: none;
+}
+
+.ticket-management .management-brand__mark {
+  position: relative;
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 28px rgba(0, 39, 35, 0.19);
+  backdrop-filter: blur(10px);
+}
+
+.ticket-management .management-brand__mark span {
+  position: absolute;
+  width: 20px;
+  height: 5px;
+  border-radius: 999px;
+  background: white;
+}
+
+.ticket-management .management-brand__mark span:last-child {
+  transform: rotate(90deg);
+}
+
+.ticket-management .management-brand > span:last-child {
+  display: grid;
+}
+
+.ticket-management .management-brand strong {
+  font-size: 1.2rem;
+  letter-spacing: -0.04em;
+}
+
+.ticket-management .management-brand strong span {
+  display: inline;
+  color: #9ee4d5;
+}
+
+.ticket-management .management-brand small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.ticket-management .sidebar-section-label {
+  padding: 0 13px 10px;
+  color: rgba(255, 255, 255, 0.43);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ticket-management .navigation {
+  gap: 6px;
+}
+
+.ticket-management .navigation-link {
+  min-height: 49px;
+  gap: 11px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.76rem;
+  font-weight: 680;
+  transition: color 180ms ease, background 180ms ease, border 180ms ease, transform 180ms ease;
+}
+
+.ticket-management .navigation-link:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+}
+
+.ticket-management .navigation-link-active {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--primary-dark);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 30px rgba(0, 52, 47, 0.18);
+}
+
+.ticket-management .navigation-icon {
+  width: 31px;
+  height: 31px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.ticket-management .navigation-icon svg,
+.ticket-management .sidebar-shortcuts svg,
+.ticket-management .management-home-link svg {
+  width: 17px;
+  height: 17px;
+}
+
+.ticket-management .navigation-link-active .navigation-icon {
+  color: white;
+  background: linear-gradient(145deg, #0a8b7e, #087064);
+  box-shadow: 0 7px 16px rgba(8, 121, 110, 0.2);
+}
+
+.ticket-management .navigation-link > i {
+  margin-left: auto;
+  font-size: 1rem;
+  font-style: normal;
+  opacity: 0.4;
+}
+
+.ticket-management .navigation-link-active > i {
+  opacity: 0.8;
+}
+
+.ticket-management .sidebar-shortcuts {
+  display: grid;
+  gap: 7px;
+  margin-top: 18px;
+  padding-top: 17px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ticket-management .sidebar-shortcuts a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 11px;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.ticket-management .sidebar-shortcuts a:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ticket-management .sidebar-shortcuts svg {
+  flex: 0 0 auto;
+}
+
+.ticket-management .sidebar-shortcuts a > span {
+  display: grid;
+}
+
+.ticket-management .sidebar-shortcuts strong {
+  font-size: 0.67rem;
+}
+
+.ticket-management .sidebar-shortcuts small {
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.55rem;
+}
+
+.ticket-management .system-status {
+  gap: 10px;
+  margin-top: 12px;
+  padding: 15px 11px 3px;
+}
+
+.ticket-management .system-status > span:last-child {
+  display: grid;
+}
+
+.ticket-management .system-status strong {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.62rem;
+}
+
+.ticket-management .system-status small {
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.43);
+  font-size: 0.54rem;
+}
+
+.ticket-management .status-dot {
+  background: #66dfb5;
+  box-shadow: 0 0 0 5px rgba(102, 223, 181, 0.1);
+}
+
+.ticket-management .main-content {
+  background:
+    radial-gradient(circle at 90% 5%, rgba(92, 190, 170, 0.13), transparent 26rem),
+    linear-gradient(145deg, #f8fcfb 0%, #edf7f5 100%);
+}
+
+.ticket-management .topbar {
+  position: sticky;
+  z-index: 30;
+  top: 0;
+  min-height: 84px;
+  padding: 14px clamp(22px, 3vw, 40px);
+  border-bottom: 1px solid rgba(211, 230, 226, 0.9);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 8px 30px rgba(23, 76, 72, 0.04);
+  backdrop-filter: blur(20px);
+}
+
+.ticket-management .topbar-copy > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 0.59rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ticket-management .topbar-copy > span i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #25aa89;
+  box-shadow: 0 0 0 4px rgba(37, 170, 137, 0.1);
+}
+
+.ticket-management .topbar h1 {
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 1.25rem;
+  letter-spacing: -0.035em;
+}
+
+.ticket-management .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ticket-management .management-home-link {
+  min-height: 39px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 1px solid #cfe4df;
+  border-radius: 11px;
+  color: var(--primary-dark);
+  background: #f8fcfb;
+  font-size: 0.67rem;
+  font-weight: 780;
+  text-decoration: none;
+  transition: border 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.ticket-management .management-home-link:hover {
+  border-color: #9ccdc3;
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.ticket-management .user-area {
+  padding-left: 14px;
+  border-left: 1px solid var(--border);
+}
+
+.ticket-management .user-avatar {
+  width: 40px;
+  height: 40px;
+  border: 2px solid white;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #45ad9a, #08796e);
+  box-shadow: 0 0 0 1px #cde2de;
+}
+
+.ticket-management .user-area strong {
+  color: var(--text);
+  font-size: 0.7rem;
+}
+
+.ticket-management .user-area span {
+  color: var(--muted);
+  font-size: 0.59rem;
+}
+
+.ticket-management .page-content {
+  width: min(1540px, 100%);
+  padding: clamp(25px, 3.2vw, 44px) clamp(20px, 3vw, 40px) 60px;
+}
+
+.ticket-management .page-heading {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.ticket-management .page-heading h2 {
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: clamp(1.85rem, 3vw, 2.55rem);
+  font-weight: 720;
+  letter-spacing: -0.055em;
+}
+
+.ticket-management .page-heading p {
+  color: var(--muted);
+  font-size: 0.79rem;
+}
+
+.ticket-management .page-kicker {
+  color: var(--primary);
+  font-size: 0.61rem;
+  letter-spacing: 0.14em;
+}
+
+.ticket-management .summary-grid {
+  gap: 15px;
+}
+
+.ticket-management .summary-card,
+.ticket-management .queue-summary-card {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(207, 227, 222, 0.95);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease, border 180ms ease;
+}
+
+.ticket-management .summary-card::after,
+.ticket-management .queue-summary-card::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  bottom: -45px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(8, 121, 110, 0.04);
+}
+
+.ticket-management .summary-card:hover,
+.ticket-management .queue-summary-card:hover {
+  border-color: #acd3ca;
+  box-shadow: 0 20px 50px rgba(23, 76, 72, 0.13);
+  transform: translateY(-3px);
+}
+
+.ticket-management .summary-icon,
+.ticket-management .appointments-section-icon,
+.ticket-management .appointment-count {
+  color: var(--primary);
+  background: linear-gradient(145deg, #e6f6f2, #d9efe9);
+}
+
+.ticket-management .content-card {
+  border-color: rgba(207, 227, 222, 0.95);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.ticket-management .quick-action {
+  border-color: #d9e9e5;
+  background: #fbfefd;
+  box-shadow: 0 5px 15px rgba(23, 76, 72, 0.03);
+  transition: border 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.ticket-management .quick-action:hover {
+  border-color: #83bfb3;
+  background: white;
+  box-shadow: 0 14px 32px rgba(23, 76, 72, 0.1);
+}
+
+.ticket-management .quick-action > span {
+  background: linear-gradient(145deg, #0a8b7e, #087064);
+  box-shadow: 0 9px 20px rgba(8, 121, 110, 0.2);
+}
+
+.ticket-management .medical-field input,
+.ticket-management .medical-field textarea,
+.ticket-management .medical-field select {
+  border-color: #d5e6e2;
+  color: var(--text);
+  background: #fbfefd;
+}
+
+.ticket-management .medical-field input:hover,
+.ticket-management .medical-field textarea:hover,
+.ticket-management .medical-field select:hover {
+  border-color: #b6d5cf;
+}
+
+.ticket-management .medical-field input:focus,
+.ticket-management .medical-field textarea:focus,
+.ticket-management .medical-field select:focus {
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(8, 121, 110, 0.09);
+}
+
+.ticket-management .medical-button {
+  border-radius: 11px;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.ticket-management .medical-button-primary {
+  background: linear-gradient(145deg, #0a877b, #076b63);
+  box-shadow: 0 10px 23px rgba(8, 121, 110, 0.2);
+}
+
+.ticket-management .medical-button-primary:not(:disabled):hover {
+  box-shadow: 0 14px 28px rgba(8, 121, 110, 0.27);
+}
+
+.ticket-management .medical-button-secondary {
+  border-color: #b9d9d2;
+  color: var(--primary-dark);
+  background: var(--primary-light);
+}
+
+.ticket-management .medical-button-secondary:not(:disabled):hover {
+  border-color: #8bc2b7;
+  background: #d4eee8;
+}
+
+.ticket-management .appointment-form-note,
+.ticket-management .medical-notice,
+.ticket-management .selected-appointment-card,
+.ticket-management .triage-patient-summary,
+.ticket-management .ticket-clinical-summary,
+.ticket-management .generated-ticket,
+.ticket-management .ticket-position-card {
+  border-color: #cfe5df;
+  color: #456a65;
+  background: #f1faf7;
+}
+
+.ticket-management .appointment-item,
+.ticket-management .assessment-history-item,
+.ticket-management .triage-pending-item,
+.ticket-management .triage-priority-option,
+.ticket-management .tickets-assessment-item,
+.ticket-management .queue-patient-card,
+.ticket-management .active-care-item {
+  border-color: #d8e8e4;
+  background: #fbfefd;
+  transition: border 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.ticket-management .appointment-item:hover,
+.ticket-management .assessment-history-item:hover,
+.ticket-management .triage-pending-item:hover,
+.ticket-management .triage-priority-option:hover,
+.ticket-management .tickets-assessment-item:hover,
+.ticket-management .queue-patient-card:hover,
+.ticket-management .active-care-item:hover {
+  border-color: rgba(8, 121, 110, 0.42);
+  box-shadow: 0 12px 28px rgba(23, 76, 72, 0.08);
+}
+
+.ticket-management .triage-pending-item-selected,
+.ticket-management .triage-priority-selected,
+.ticket-management .tickets-assessment-item-selected {
+  border-color: var(--primary);
+  background: #edf9f6;
+  box-shadow: 0 0 0 3px rgba(8, 121, 110, 0.09);
+}
+
+.ticket-management .triage-clinical-information > div,
+.ticket-management .generated-ticket-grid > div,
+.ticket-management .ticket-clinical-grid > div,
+.ticket-management .appointment-information-grid > div,
+.ticket-management .queue-patient-grid > div {
+  border-color: #dfebe8;
+  background: #f9fcfb;
+}
+
+.ticket-management .empty-state,
+.ticket-management .appointments-empty,
+.ticket-management .triage-empty,
+.ticket-management .tickets-empty,
+.ticket-management .queue-empty,
+.ticket-management .doctor-dashboard__empty {
+  border-color: #bfdcd6;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.ticket-management .empty-state-icon,
+.ticket-management .appointments-empty > span,
+.ticket-management .triage-empty > span,
+.ticket-management .tickets-empty > span,
+.ticket-management .queue-empty > span {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.ticket-management .appointments-list,
+.ticket-management .assessment-history-list,
+.ticket-management .triage-pending-list,
+.ticket-management .tickets-assessment-list,
+.ticket-management .queue-list {
+  scrollbar-color: #a8cec6 transparent;
+  scrollbar-width: thin;
+}
+
+.ticket-management .medical-spinner {
+  border-color: #d5e9e4;
+  border-top-color: var(--primary);
+}
+
+.ticket-management .queue-filter-card {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.ticket-management .queue-summary-critical,
+.ticket-management .queue-summary-high,
+.ticket-management .queue-summary-preferential {
+  background: white;
+}
+
+@media (max-width: 900px) {
+  .ticket-management .app-layout {
+    display: block;
+  }
+
+  .ticket-management .sidebar {
+    position: relative;
+    height: auto;
+    padding: 15px 16px 12px;
+    box-shadow: 0 10px 35px rgba(15, 73, 67, 0.13);
+  }
+
+  .ticket-management .management-brand {
+    padding: 0 5px 13px;
+  }
+
+  .ticket-management .management-brand__mark {
+    width: 37px;
+    height: 37px;
+    border-radius: 12px;
+  }
+
+  .ticket-management .sidebar-section-label,
+  .ticket-management .sidebar-shortcuts,
+  .ticket-management .system-status {
+    display: none;
+  }
+
+  .ticket-management .navigation {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 2px 0 4px;
+    scrollbar-width: none;
+  }
+
+  .ticket-management .navigation::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ticket-management .navigation-link {
+    min-width: max-content;
+    min-height: 42px;
+    padding: 6px 10px;
+  }
+
+  .ticket-management .navigation-link > i {
+    display: none;
+  }
+
+  .ticket-management .navigation-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .ticket-management .topbar {
+    top: 0;
+  }
+}
+
+@media (max-width: 650px) {
+  .ticket-management .topbar {
+    min-height: 72px;
+    padding: 12px 16px;
+  }
+
+  .ticket-management .topbar-copy > span {
+    display: none;
+  }
+
+  .ticket-management .topbar h1 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .ticket-management .topbar-actions {
+    gap: 8px;
+  }
+
+  .ticket-management .management-home-link {
+    width: 38px;
+    min-height: 38px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .ticket-management .management-home-link span,
+  .ticket-management .user-area > div:last-child {
+    display: none;
+  }
+
+  .ticket-management .user-area {
+    padding-left: 8px;
+  }
+
+  .ticket-management .user-avatar {
+    width: 37px;
+    height: 37px;
+  }
+
+  .ticket-management .page-content {
+    padding: 24px 14px 42px;
+  }
+
+  .ticket-management .page-heading,
+  .ticket-management .appointments-heading,
+  .ticket-management .symptoms-heading,
+  .ticket-management .triage-heading,
+  .ticket-management .tickets-heading,
+  .ticket-management .queue-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ticket-management .content-card {
+    padding: 19px;
+    border-radius: 18px;
+  }
+
+  .ticket-management .summary-card {
+    min-height: 112px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket-management *,
+  .ticket-management *::before,
+  .ticket-management *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
