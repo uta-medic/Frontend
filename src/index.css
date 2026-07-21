@@ -2213,3 +2213,99 @@ p {
     flex-direction: column;
   }
 }
+.active-care-card {
+  margin-bottom: 20px;
+  border-left: 5px solid #7151b5;
+}
+
+.active-care-list {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.active-care-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 18px;
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: #fbfdfe;
+}
+
+.active-care-item > div:first-child > span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.active-care-item h4 {
+  margin-bottom: 5px;
+  font-family: Consolas, monospace;
+  font-size: 13px;
+}
+
+.active-care-item p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.active-care-status {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.active-care-status-called {
+  color: #6845a8;
+  background: #f0e9ff;
+}
+
+.active-care-status-in_service {
+  color: #176a96;
+  background: #e3f3fc;
+}
+
+.active-care-actions {
+  display: flex;
+  gap: 9px;
+}
+
+.queue-call-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 900px) {
+  .active-care-item {
+    grid-template-columns: 1fr;
+  }
+
+  .active-care-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .active-care-actions {
+    flex-direction: column;
+  }
+
+  .active-care-actions .medical-button,
+  .queue-call-action .medical-button {
+    width: 100%;
+  }
+}

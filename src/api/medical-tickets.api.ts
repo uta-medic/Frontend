@@ -65,3 +65,46 @@ export function getMedicalTicketQueue(
     `/medical-tickets/queue?${searchParams.toString()}`,
   );
 }
+export function callMedicalTicketPatient(
+  ticketId: string,
+): Promise<MedicalTicket> {
+  return apiRequest<MedicalTicket>(
+    `/medical-tickets/${ticketId}/call`,
+    {
+      method: 'PATCH',
+    },
+  );
+}
+
+export function startMedicalTicketService(
+  ticketId: string,
+): Promise<MedicalTicket> {
+  return apiRequest<MedicalTicket>(
+    `/medical-tickets/${ticketId}/start-service`,
+    {
+      method: 'PATCH',
+    },
+  );
+}
+
+export function completeMedicalTicketService(
+  ticketId: string,
+): Promise<MedicalTicket> {
+  return apiRequest<MedicalTicket>(
+    `/medical-tickets/${ticketId}/complete`,
+    {
+      method: 'PATCH',
+    },
+  );
+}
+
+export function markMedicalTicketNoShow(
+  ticketId: string,
+): Promise<MedicalTicket> {
+  return apiRequest<MedicalTicket>(
+    `/medical-tickets/${ticketId}/no-show`,
+    {
+      method: 'PATCH',
+    },
+  );
+}

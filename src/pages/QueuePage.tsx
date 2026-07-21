@@ -7,8 +7,12 @@ import {
 
 import { ApiError } from '../api/api-client';
 import {
+  callMedicalTicketPatient,
+  completeMedicalTicketService,
   getMedicalTicketQueue,
   getMedicalTickets,
+  markMedicalTicketNoShow,
+  startMedicalTicketService,
 } from '../api/medical-tickets.api';
 
 import type {
@@ -77,9 +81,7 @@ export function QueuePage() {
     MedicalTicket[]
   >([]);
 
-  const [queue, setQueue] = useState<MedicalTicket[]>(
-    [],
-  );
+  const [queue, setQueue] = useState<MedicalTicket[]>([]);
 
   const [hospitalId, setHospitalId] = useState('');
   const [specialtyId, setSpecialtyId] = useState('');
@@ -91,69 +93,126 @@ export function QueuePage() {
   const [isLoadingQueue, setIsLoadingQueue] =
     useState(false);
 
+  const [actionTicketId, setActionTicketId] = useState<
+    string | null
+  >(null);
+
   const [errorMessage, setErrorMessage] = useState<
     string | null
   >(null);
 
-  const waitingTickets = useMemo(() => {
-    return allTickets.filter(
-      (ticket) => ticket.status === 'waiting',
-    );
-  }, [allTickets]);
+  const [successMessage, setSuccessMessage] = useState<
+    string | null
+  >(null);
 
-  const hospitalOptions = useMemo(() => {
-    return Array.from(
-      new Set(
-        waitingTickets.map((ticket) => ticket.hospitalId),
+  
+  const hospitalOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          allTickets
+            .filter((ticket) =>
+              ['waiting', 'called', 'in_service'].includes(
+                ticket.status,
+              ),
+            )
+            .map((ticket) => ticket.hospitalId),
+        ),
       ),
-    );
-  }, [waitingTickets]);
+    [allTickets],
+  );
 
-  const specialtyOptions = useMemo(() => {
-    return Array.from(
-      new Set(
-        waitingTickets
-          .filter(
-            (ticket) =>
-              !hospitalId ||
-              ticket.hospitalId === hospitalId,
-          )
-          .map((ticket) => ticket.specialtyId),
+  const specialtyOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          allTickets
+            .filter(
+              (ticket) =>
+                ['waiting', 'called', 'in_service'].includes(
+                  ticket.status,
+                ) &&
+                (!hospitalId ||
+                  ticket.hospitalId === hospitalId),
+            )
+            .map((ticket) => ticket.specialtyId),
+        ),
       ),
-    );
-  }, [waitingTickets, hospitalId]);
+    [allTickets, hospitalId],
+  );
 
-  const dateOptions = useMemo(() => {
-    return Array.from(
-      new Set(
-        waitingTickets
-          .filter(
-            (ticket) =>
-              (!hospitalId ||
-                ticket.hospitalId === hospitalId) &&
-              (!specialtyId ||
-                ticket.specialtyId === specialtyId),
-          )
-          .map((ticket) => ticket.ticketDate),
+  const dateOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          allTickets
+            .filter(
+              (ticket) =>
+                ['waiting', 'called', 'in_service'].includes(
+                  ticket.status,
+                ) &&
+                (!hospitalId ||
+                  ticket.hospitalId === hospitalId) &&
+                (!specialtyId ||
+                  ticket.specialtyId === specialtyId),
+            )
+            .map((ticket) => ticket.ticketDate),
+        ),
+      ).sort(),
+    [allTickets, hospitalId, specialtyId],
+  );
+
+  const activeTickets = useMemo(
+    () =>
+      allTickets
+        .filter(
+          (ticket) =>
+            ticket.hospitalId === hospitalId &&
+            ticket.specialtyId === specialtyId &&
+            ticket.ticketDate === ticketDate &&
+            ['called', 'in_service'].includes(ticket.status),
+        )
+        .sort(
+          (first, second) =>
+            new Date(
+              first.calledAt ?? first.updatedAt,
+            ).getTime() -
+            new Date(
+              second.calledAt ?? second.updatedAt,
+            ).getTime(),
+        ),
+    [allTickets, hospitalId, specialtyId, ticketDate],
+  );
+
+  const completedToday = useMemo(
+    () =>
+      allTickets.filter(
+        (ticket) =>
+          ticket.hospitalId === hospitalId &&
+          ticket.specialtyId === specialtyId &&
+          ticket.ticketDate === ticketDate &&
+          ticket.status === 'completed',
       ),
-    ).sort();
-  }, [waitingTickets, hospitalId, specialtyId]);
+    [allTickets, hospitalId, specialtyId, ticketDate],
+  );
 
-  const prioritySummary = useMemo(() => {
-    return queue.reduce<Record<TriagePriority, number>>(
-      (summary, ticket) => {
-        summary[ticket.triagePriority] += 1;
-        return summary;
-      },
-      {
-        low: 0,
-        medium: 0,
-        medium_high: 0,
-        high: 0,
-        very_high: 0,
-      },
-    );
-  }, [queue]);
+  const prioritySummary = useMemo(
+    () =>
+      queue.reduce<Record<TriagePriority, number>>(
+        (summary, ticket) => {
+          summary[ticket.triagePriority] += 1;
+          return summary;
+        },
+        {
+          low: 0,
+          medium: 0,
+          medium_high: 0,
+          high: 0,
+          very_high: 0,
+        },
+      ),
+    [queue],
+  );
 
   const loadTickets = useCallback(async () => {
     try {
@@ -161,21 +220,27 @@ export function QueuePage() {
       setErrorMessage(null);
 
       const response = await getMedicalTickets();
+
       setAllTickets(response);
 
-      const firstWaitingTicket = response.find(
-        (ticket) => ticket.status === 'waiting',
+      const firstActiveTicket = response.find((ticket) =>
+        ['waiting', 'called', 'in_service'].includes(
+          ticket.status,
+        ),
       );
 
-      if (firstWaitingTicket) {
-        setHospitalId(firstWaitingTicket.hospitalId);
-        setSpecialtyId(firstWaitingTicket.specialtyId);
-        setTicketDate(firstWaitingTicket.ticketDate);
-      } else {
-        setHospitalId('');
-        setSpecialtyId('');
-        setTicketDate('');
-        setQueue([]);
+      if (firstActiveTicket) {
+        setHospitalId((current) =>
+          current || firstActiveTicket.hospitalId,
+        );
+
+        setSpecialtyId((current) =>
+          current || firstActiveTicket.specialtyId,
+        );
+
+        setTicketDate((current) =>
+          current || firstActiveTicket.ticketDate,
+        );
       }
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
@@ -217,34 +282,70 @@ export function QueuePage() {
     void loadQueue();
   }, [loadQueue]);
 
+  function updateTicket(updatedTicket: MedicalTicket) {
+    setAllTickets((current) =>
+      current.map((ticket) =>
+        ticket.id === updatedTicket.id
+          ? updatedTicket
+          : ticket,
+      ),
+    );
+  }
+
+  async function runTicketAction(
+    ticket: MedicalTicket,
+    action: (
+      ticketId: string,
+    ) => Promise<MedicalTicket>,
+    message: string,
+  ) {
+    try {
+      setActionTicketId(ticket.id);
+      setErrorMessage(null);
+      setSuccessMessage(null);
+
+      const updatedTicket = await action(ticket.id);
+
+      updateTicket(updatedTicket);
+
+      setSuccessMessage(message);
+
+      await loadQueue();
+    } catch (error) {
+      setErrorMessage(getErrorMessage(error));
+    } finally {
+      setActionTicketId(null);
+    }
+  }
+
   function handleHospitalChange(value: string) {
     setHospitalId(value);
 
-    const firstMatchingTicket = waitingTickets.find(
-      (ticket) => ticket.hospitalId === value,
+    const matchingTicket = allTickets.find(
+      (ticket) =>
+        ticket.hospitalId === value &&
+        ['waiting', 'called', 'in_service'].includes(
+          ticket.status,
+        ),
     );
 
-    setSpecialtyId(
-      firstMatchingTicket?.specialtyId ?? '',
-    );
-
-    setTicketDate(
-      firstMatchingTicket?.ticketDate ?? '',
-    );
+    setSpecialtyId(matchingTicket?.specialtyId ?? '');
+    setTicketDate(matchingTicket?.ticketDate ?? '');
   }
 
   function handleSpecialtyChange(value: string) {
     setSpecialtyId(value);
 
-    const firstMatchingTicket = waitingTickets.find(
+    const matchingTicket = allTickets.find(
       (ticket) =>
         ticket.hospitalId === hospitalId &&
-        ticket.specialtyId === value,
+        ticket.specialtyId === value &&
+        ['waiting', 'called', 'in_service'].includes(
+          ticket.status,
+        ),
     );
 
-    setTicketDate(
-      firstMatchingTicket?.ticketDate ?? '',
-    );
+    setTicketDate(matchingTicket?.ticketDate ?? '');
   }
 
   return (
@@ -258,8 +359,8 @@ export function QueuePage() {
           <h2>Cola de atención</h2>
 
           <p>
-            Consulta el orden de atención según la prioridad
-            clínica, atención preferente y hora de llegada.
+            Llama pacientes, inicia consultas y registra la
+            finalización de cada atención médica.
           </p>
         </div>
 
@@ -277,8 +378,15 @@ export function QueuePage() {
 
       {errorMessage && (
         <div className="medical-alert medical-alert-error">
-          <strong>No se pudo consultar la cola</strong>
+          <strong>No se pudo completar la operación</strong>
           <span>{errorMessage}</span>
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="medical-alert medical-alert-success">
+          <strong>Estado actualizado</strong>
+          <span>{successMessage}</span>
         </div>
       )}
 
@@ -302,14 +410,13 @@ export function QueuePage() {
 
             <select
               value={hospitalId}
-              disabled={hospitalOptions.length === 0}
               onChange={(event) =>
                 handleHospitalChange(event.target.value)
               }
             >
               {hospitalOptions.length === 0 && (
                 <option value="">
-                  No existen centros con pacientes en espera
+                  No existen centros activos
                 </option>
               )}
 
@@ -326,14 +433,13 @@ export function QueuePage() {
 
             <select
               value={specialtyId}
-              disabled={specialtyOptions.length === 0}
               onChange={(event) =>
                 handleSpecialtyChange(event.target.value)
               }
             >
               {specialtyOptions.length === 0 && (
                 <option value="">
-                  No existen especialidades disponibles
+                  No existen especialidades activas
                 </option>
               )}
 
@@ -350,14 +456,13 @@ export function QueuePage() {
 
             <select
               value={ticketDate}
-              disabled={dateOptions.length === 0}
               onChange={(event) =>
                 setTicketDate(event.target.value)
               }
             >
               {dateOptions.length === 0 && (
                 <option value="">
-                  No existen fechas disponibles
+                  No existen fechas activas
                 </option>
               )}
 
@@ -375,7 +480,7 @@ export function QueuePage() {
         <article className="queue-summary-card">
           <span>Total en espera</span>
           <strong>{queue.length}</strong>
-          <small>Pacientes en la cola seleccionada</small>
+          <small>Pacientes pendientes de llamada</small>
         </article>
 
         <article className="queue-summary-card queue-summary-critical">
@@ -391,17 +496,113 @@ export function QueuePage() {
         </article>
 
         <article className="queue-summary-card queue-summary-preferential">
-          <span>Atención preferente</span>
-          <strong>
-            {
-              queue.filter(
-                (ticket) => ticket.hasPriorityCare,
-              ).length
-            }
-          </strong>
-          <small>Pacientes con condición preferente</small>
+          <span>Atenciones completadas</span>
+          <strong>{completedToday.length}</strong>
+          <small>Finalizadas en la cola seleccionada</small>
         </article>
       </div>
+
+      {activeTickets.length > 0 && (
+        <article className="content-card active-care-card">
+          <div className="appointments-section-header">
+            <div>
+              <span className="page-kicker">
+                Atención actual
+              </span>
+              <h3>Pacientes llamados o en consulta</h3>
+            </div>
+
+            <span className="appointment-count">
+              {activeTickets.length}
+            </span>
+          </div>
+
+          <div className="active-care-list">
+            {activeTickets.map((ticket) => (
+              <article
+                className="active-care-item"
+                key={ticket.id}
+              >
+                <div>
+                  <span>Número de ficha</span>
+                  <h4>{ticket.ticketNumber}</h4>
+
+                  <p>
+                    {ticket.status === 'called'
+                      ? `Paciente llamado a las ${formatTime(
+                          ticket.calledAt,
+                        )}`
+                      : `Atención iniciada a las ${formatTime(
+                          ticket.serviceStartedAt,
+                        )}`}
+                  </p>
+                </div>
+
+                <span
+                  className={`active-care-status active-care-status-${ticket.status}`}
+                >
+                  {ticket.status === 'called'
+                    ? 'Paciente llamado'
+                    : 'En atención'}
+                </span>
+
+                <div className="active-care-actions">
+                  {ticket.status === 'called' && (
+                    <>
+                      <button
+                        className="medical-button medical-button-primary"
+                        type="button"
+                        disabled={actionTicketId === ticket.id}
+                        onClick={() =>
+                          void runTicketAction(
+                            ticket,
+                            startMedicalTicketService,
+                            'La atención médica fue iniciada.',
+                          )
+                        }
+                      >
+                        Iniciar atención
+                      </button>
+
+                      <button
+                        className="medical-button medical-button-danger"
+                        type="button"
+                        disabled={actionTicketId === ticket.id}
+                        onClick={() =>
+                          void runTicketAction(
+                            ticket,
+                            markMedicalTicketNoShow,
+                            'El paciente fue marcado como no asistió.',
+                          )
+                        }
+                      >
+                        No se presentó
+                      </button>
+                    </>
+                  )}
+
+                  {ticket.status === 'in_service' && (
+                    <button
+                      className="medical-button medical-button-primary"
+                      type="button"
+                      disabled={actionTicketId === ticket.id}
+                      onClick={() =>
+                        void runTicketAction(
+                          ticket,
+                          completeMedicalTicketService,
+                          'La atención médica fue completada.',
+                        )
+                      }
+                    >
+                      Finalizar atención
+                    </button>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </article>
+      )}
 
       <article className="content-card queue-list-card">
         <div className="appointments-section-header">
@@ -427,8 +628,8 @@ export function QueuePage() {
             <span>✓</span>
             <h4>No existen pacientes en espera</h4>
             <p>
-              No se encontraron fichas activas para el centro,
-              especialidad y fecha seleccionados.
+              Los pacientes llamados o atendidos dejan de
+              aparecer en la cola de espera.
             </p>
           </div>
         ) : (
@@ -469,9 +670,7 @@ export function QueuePage() {
 
                     <div>
                       <span>Secuencia diaria</span>
-                      <strong>
-                        {ticket.dailySequence}
-                      </strong>
+                      <strong>{ticket.dailySequence}</strong>
                     </div>
 
                     <div>
@@ -489,6 +688,25 @@ export function QueuePage() {
                       <span>Estado</span>
                       <strong>En espera</strong>
                     </div>
+                  </div>
+
+                  <div className="queue-call-action">
+                    <button
+                      className="medical-button medical-button-primary"
+                      type="button"
+                      disabled={actionTicketId === ticket.id}
+                      onClick={() =>
+                        void runTicketAction(
+                          ticket,
+                          callMedicalTicketPatient,
+                          `El paciente con ficha ${ticket.ticketNumber} fue llamado.`,
+                        )
+                      }
+                    >
+                      {actionTicketId === ticket.id
+                        ? 'Llamando...'
+                        : 'Llamar paciente'}
+                    </button>
                   </div>
                 </div>
               </article>
