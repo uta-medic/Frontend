@@ -8,9 +8,9 @@ function App() {
   const { user, logout } = useAuth();
 
   return (
-    <>
+    <div className="telemedicine-page">
       {/* HEADER */}
-      <header className="app-header">
+      <header className="telemedicine-header">
         <div className="header-inner">
           <div className="logo">
             <div className="logo-icon">🏥</div>
@@ -81,7 +81,7 @@ function App() {
         </footer>
 
       </main>
-    </>
+    </div>
   )
 }
 

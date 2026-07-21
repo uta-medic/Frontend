@@ -1,13 +1,14 @@
 /* ========================================
    RESET Y VARIABLES
    ======================================== */
-* {
+.telemedicine-page,
+.telemedicine-page * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-:root {
+.telemedicine-page {
   --primary: #0A5C8C;
   --primary-light: #1A7AB5;
   --primary-dark: #063A5A;
@@ -35,7 +36,7 @@
   --transition: all 0.3s ease;
 }
 
-body {
+.telemedicine-page {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   background: var(--gray-50);
   color: var(--gray-800);
@@ -46,7 +47,7 @@ body {
 /* ========================================
    HEADER
    ======================================== */
-.app-header {
+.telemedicine-header {
   background: var(--white);
   border-bottom: 1px solid var(--gray-200);
   padding: 0 32px;
@@ -251,7 +252,9 @@ body {
 }
 
 .precall-form .form-group select,
-.precall-form .form-group input[type="text"] {
+.precall-form .form-group input[type="text"],
+.precall-form .form-group input[type="email"],
+.precall-form .form-group input[type="password"] {
   width: 100%;
   padding: 10px 14px;
   border: 1.5px solid var(--gray-200);
@@ -264,7 +267,9 @@ body {
 }
 
 .precall-form .form-group select:focus,
-.precall-form .form-group input[type="text"]:focus {
+.precall-form .form-group input[type="text"]:focus,
+.precall-form .form-group input[type="email"]:focus,
+.precall-form .form-group input[type="password"]:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(10, 92, 140, 0.06);
@@ -971,7 +976,7 @@ body {
    RESPONSIVE
    ======================================== */
 @media (max-width: 768px) {
-  .app-header {
+  .telemedicine-header {
     padding: 0 16px;
     height: 56px;
   }
