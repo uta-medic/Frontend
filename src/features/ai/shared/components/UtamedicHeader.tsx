@@ -13,6 +13,7 @@ export function UtamedicHeader() {
 
       <nav className="agent-navigation" aria-label="Agentes de IA">
         <NavLink to="/asistente">Asistente</NavLink>
+        <NavLink to="/teleconsulta">Teleconsulta</NavLink>
         <NavLink to="/medico/copiloto">Copiloto médico</NavLink>
       </nav>
     </header>

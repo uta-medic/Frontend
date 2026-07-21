@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
+  readonly VITE_SIGNALING_URL?: string;
   readonly VITE_USE_AI_MOCKS?: string;
 }
 

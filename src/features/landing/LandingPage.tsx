@@ -67,6 +67,7 @@ export function LandingPage() {
         <nav className="landing-nav" aria-label="Navegación principal">
           <a href="#servicios">Servicios</a>
           <a href="#como-funciona">Cómo funciona</a>
+          <Link to="/teleconsulta">Teleconsulta</Link>
           <a href="#profesionales">Para médicos</a>
         </nav>
 
@@ -226,7 +227,7 @@ export function LandingPage() {
           <span>Uta<span>medic</span></span>
         </div>
         <p>Orientación de salud clara, humana y accesible.</p>
-        <nav aria-label="Enlaces del pie de página"><Link to="/asistente">Asistente</Link><Link to="/medico/copiloto">Profesionales</Link><a href="#servicios">Servicios</a></nav>
+        <nav aria-label="Enlaces del pie de página"><Link to="/asistente">Asistente</Link><Link to="/teleconsulta">Teleconsulta</Link><Link to="/medico/copiloto">Profesionales</Link><a href="#servicios">Servicios</a></nav>
         <small>© 2026 Utamedic. La información brindada no reemplaza una evaluación médica profesional.</small>
       </footer>
     </div>
