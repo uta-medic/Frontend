@@ -1,4 +1,4 @@
-:root {
+.ticket-management {
   font-family:
     Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
@@ -15,13 +15,12 @@
   --muted: #667b8d;
   --border: #dce7ee;
   --shadow: 0 14px 35px rgba(35, 72, 101, 0.08);
-}
 
 * {
   box-sizing: border-box;
 }
 
-body {
+& {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
@@ -822,12 +821,15 @@ p {
   animation: medical-spin 750ms linear infinite;
 }
 
+}
+
 @keyframes medical-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
+.ticket-management {
 @media (max-width: 1180px) {
   .appointments-workspace {
     grid-template-columns: 1fr;
@@ -2199,6 +2201,7 @@ p {
   .queue-patient-header {
     flex-direction: column;
   }
+}
 }
 .dashboard-heading {
   display: flex;

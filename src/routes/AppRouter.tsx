@@ -21,27 +21,27 @@ export function AppRouter() {
           <Route index element={<DashboardPage />} />
 
           <Route
-            path="/citas"
+            path="/gestion/citas"
             element={<AppointmentsPage />}
           />
 
           <Route
-            path="/sintomas"
+            path="/gestion/sintomas"
             element={<RegisterSymptomsPage />}
           />
 
           <Route
-            path="/evaluaciones"
+            path="/gestion/evaluaciones"
             element={<TriageAssessmentsPage />}
           />
 
           <Route
-            path="/fichas"
+            path="/gestion/fichas"
             element={<MedicalTicketsPage />}
           />
 
           <Route
-            path="/cola"
+            path="/gestion/cola"
             element={<QueuePage />}
           />
         </Route>

@@ -1,17 +1,19 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import '../../index.css';
 
 const navigationItems = [
-  { path: '/', label: 'Inicio', icon: '⌂', end: true },
-  { path: '/citas', label: 'Citas médicas', icon: '▣' },
-  { path: '/sintomas', label: 'Registrar síntomas', icon: '✚' },
-  { path: '/evaluaciones', label: 'Evaluaciones', icon: '✓' },
-  { path: '/fichas', label: 'Fichas médicas', icon: '▤' },
-  { path: '/cola', label: 'Cola de atención', icon: '☷' },
+  { path: '/gestion', label: 'Inicio', icon: '⌂', end: true },
+  { path: '/gestion/citas', label: 'Citas médicas', icon: '▣' },
+  { path: '/gestion/sintomas', label: 'Registrar síntomas', icon: '✚' },
+  { path: '/gestion/evaluaciones', label: 'Evaluaciones', icon: '✓' },
+  { path: '/gestion/fichas', label: 'Fichas médicas', icon: '▤' },
+  { path: '/gestion/cola', label: 'Cola de atención', icon: '☷' },
 ];
 
 export function AppLayout() {
   return (
-    <div className="app-layout">
+    <div className="ticket-management">
+      <div className="app-layout">
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-icon">+</div>
@@ -66,6 +68,7 @@ export function AppLayout() {
         <main className="page-content">
           <Outlet />
         </main>
+      </div>
       </div>
     </div>
   );

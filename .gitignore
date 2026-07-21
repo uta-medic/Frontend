@@ -7,20 +7,13 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependencias
 node_modules
-
-# Archivos generados
 dist
 dist-ssr
-
-# Variables de entorno
+*.local
 .env
 .env.*
 !.env.example
-
-# Archivos locales
-*.local
 
 # Editor directories and files
 .vscode/*
@@ -32,3 +25,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# dotenv environment variable files
+.env
+.env.development
+.env.production

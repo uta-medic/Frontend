@@ -174,7 +174,7 @@ export function DashboardPage() {
         </div>
 
         <div className="quick-actions">
-          <Link className="quick-action" to="/citas">
+          <Link className="quick-action" to="/gestion/citas">
             <span>+</span>
 
             <div>
@@ -183,7 +183,7 @@ export function DashboardPage() {
             </div>
           </Link>
 
-          <Link className="quick-action" to="/sintomas">
+          <Link className="quick-action" to="/gestion/sintomas">
             <span>✚</span>
 
             <div>
@@ -194,7 +194,7 @@ export function DashboardPage() {
 
           <Link
             className="quick-action"
-            to="/evaluaciones"
+            to="/gestion/evaluaciones"
           >
             <span>✓</span>
 
@@ -204,7 +204,7 @@ export function DashboardPage() {
             </div>
           </Link>
 
-          <Link className="quick-action" to="/cola">
+          <Link className="quick-action" to="/gestion/cola">
             <span>☷</span>
 
             <div>
