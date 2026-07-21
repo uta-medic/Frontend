@@ -6,9 +6,12 @@ import {
 } from 'react-router-dom';
 
 import { AppLayout } from '../components/layout/AppLayout';
-import { DashboardPage } from '../pages/DashboardPage';
-import { PlaceholderPage } from '../pages/PlaceholderPage';
 import { AppointmentsPage } from '../pages/AppointmentsPage';
+import { DashboardPage } from '../pages/DashboardPage';
+import { MedicalTicketsPage } from '../pages/MedicalTicketsPage';
+import { QueuePage } from '../pages/QueuePage';
+import { RegisterSymptomsPage } from '../pages/RegisterSymptomsPage';
+import { TriageAssessmentsPage } from '../pages/TriageAssessmentsPage';
 
 export function AppRouter() {
   return (
@@ -18,56 +21,35 @@ export function AppRouter() {
           <Route index element={<DashboardPage />} />
 
           <Route
-  path="/citas"
-  element={<AppointmentsPage />}
-/>
+            path="/citas"
+            element={<AppointmentsPage />}
+          />
 
           <Route
             path="/sintomas"
-            element={
-              <PlaceholderPage
-                title="Registrar síntomas"
-                description="Registra los síntomas declarados por el paciente."
-                icon="✚"
-              />
-            }
+            element={<RegisterSymptomsPage />}
           />
 
           <Route
             path="/evaluaciones"
-            element={
-              <PlaceholderPage
-                title="Evaluación de pacientes"
-                description="Revisa los síntomas y asigna una prioridad clínica."
-                icon="✓"
-              />
-            }
+            element={<TriageAssessmentsPage />}
           />
 
           <Route
             path="/fichas"
-            element={
-              <PlaceholderPage
-                title="Fichas médicas"
-                description="Genera la ficha médica y registra la llegada del paciente."
-                icon="▤"
-              />
-            }
+            element={<MedicalTicketsPage />}
           />
 
           <Route
             path="/cola"
-            element={
-              <PlaceholderPage
-                title="Cola de atención"
-                description="Consulta la cola y la posición de cada paciente."
-                icon="☷"
-              />
-            }
+            element={<QueuePage />}
           />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
       </Routes>
     </BrowserRouter>
   );
