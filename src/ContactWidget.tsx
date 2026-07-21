@@ -34,7 +34,7 @@ export default function ContactWidget() {
   }
 
   function goToVideoCall() {
-    window.location.href = `/consulta?room=${crypto.randomUUID()}`;
+    window.location.href = `/teleconsulta?room=${crypto.randomUUID()}`;
   }
 
   function startChat() {
@@ -76,8 +76,9 @@ export default function ContactWidget() {
 
   if (state === 'closed') {
     return (
-      <button className="contact-fab" onClick={() => setState('menu')}>
-        💬 Comunícate con nosotros
+      <button className="contact-fab" type="button" onClick={() => setState('menu')}>
+        <span aria-hidden="true">?</span>
+        <span><strong>¿Necesitas ayuda?</strong><small>Estamos en línea</small></span>
       </button>
     );
   }
@@ -85,33 +86,37 @@ export default function ContactWidget() {
   return (
     <div className="contact-widget">
       <div className="widget-header">
-        <h4>Uta-Medic</h4>
-        <button onClick={closeWidget}>✕</button>
+        <div><span aria-hidden="true">+</span><div><h4>Soporte Utamedic</h4><small><i /> En línea</small></div></div>
+        <button type="button" onClick={closeWidget} aria-label="Cerrar ayuda">×</button>
       </div>
 
       <div className="widget-body">
         {state === 'menu' && (
           <div className="widget-menu">
             <button className="menu-option" onClick={goToVideoCall}>
-              <span className="menu-icon">🎥</span>
-              <span>Iniciar videoconsulta</span>
+              <span className="menu-icon" aria-hidden="true">V</span>
+              <span><strong>Iniciar videoconsulta</strong><small>Accede a tu sala virtual</small></span>
+              <i aria-hidden="true">→</i>
             </button>
             <button className="menu-option" onClick={() => setState('chat-form')}>
-              <span className="menu-icon">💬</span>
-              <span>Chat con nosotros</span>
+              <span className="menu-icon" aria-hidden="true">C</span>
+              <span><strong>Chat con soporte</strong><small>Escríbenos directamente</small></span>
+              <i aria-hidden="true">→</i>
             </button>
             <button className="menu-option" onClick={openWhatsApp}>
-              <span className="menu-icon dot-online">🟢</span>
-              <span>WhatsApp directo</span>
+              <span className="menu-icon dot-online" aria-hidden="true">W</span>
+              <span><strong>WhatsApp directo</strong><small>Continuar en WhatsApp</small></span>
+              <i aria-hidden="true">→</i>
             </button>
           </div>
         )}
 
         {state === 'chat-form' && (
           <div className="widget-form">
-            <input placeholder="Nombre completo" value={name} onChange={(e) => setName(e.target.value)} />
-            <input placeholder="CI" value={ci} onChange={(e) => setCi(e.target.value)} />
-            <input placeholder="Teléfono" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <div><span className="telemedicine-kicker">Antes de comenzar</span><h4>Cuéntanos quién eres</h4><p>Usaremos estos datos para atender tu solicitud.</p></div>
+            <label>Nombre completo<input placeholder="Tu nombre" value={name} onChange={(e) => setName(e.target.value)} /></label>
+            <label>Documento de identidad<input placeholder="Número de CI" value={ci} onChange={(e) => setCi(e.target.value)} /></label>
+            <label>Teléfono<input placeholder="Número de contacto" value={phone} onChange={(e) => setPhone(e.target.value)} /></label>
             <button className="widget-submit" onClick={startChat}>Iniciar chat</button>
           </div>
         )}
@@ -119,7 +124,7 @@ export default function ContactWidget() {
         {state === 'chat-active' && (
           <div className="widget-chat">
             <div className="widget-chat-messages">
-              {messages.length === 0 && <p className="widget-chat-empty">Escríbenos, te responderemos pronto.</p>}
+              {messages.length === 0 && <div className="widget-chat-empty"><span aria-hidden="true">•••</span><strong>¿Cómo podemos ayudarte?</strong><p>Escríbenos y responderemos pronto.</p></div>}
               {messages.map((msg, i) => (
                 <div key={i} className={`widget-bubble ${msg.own ? 'own' : 'other'}`}>
                   <span className="widget-bubble-sender">{msg.own ? 'Tú' : msg.sender}</span>
@@ -129,8 +134,8 @@ export default function ContactWidget() {
               <div ref={bottomRef} />
             </div>
             <div className="widget-chat-input">
-              <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="Escribe un mensaje..." />
-              <button onClick={sendMessage}>Enviar</button>
+              <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="Escribe un mensaje..." aria-label="Mensaje para soporte" />
+              <button onClick={sendMessage} disabled={!input.trim()}>Enviar</button>
             </div>
           </div>
         )}

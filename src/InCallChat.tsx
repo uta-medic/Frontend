@@ -50,21 +50,30 @@ export default function InCallChat({ socket, roomId, myName }: Props) {
     if (e.key === 'Enter') sendMessage();
   }
 
+  function formatTime(timestamp: string) {
+    const date = new Date(timestamp);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' });
+  }
+
   return (
     <div className={`in-call-chat ${open ? 'open' : 'closed'}`}>
-      <button className="chat-toggle" onClick={() => setOpen(!open)}>
-        💬 Chat {open ? '▼' : '▲'}
+      <button className="chat-toggle" type="button" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span className="chat-toggle__icon" aria-hidden="true">•••</span>
+        <span><strong>Chat de la consulta</strong><small>{messages.length ? `${messages.length} mensaje${messages.length === 1 ? '' : 's'}` : 'Disponible durante la llamada'}</small></span>
+        <i aria-hidden="true">{open ? '−' : '+'}</i>
       </button>
 
       {open && (
         <div className="chat-panel">
+          <div className="chat-panel__notice">No compartas contraseñas ni datos bancarios.</div>
           <div className="chat-messages">
             {messages.length === 0 && (
-              <p className="chat-empty">Aún no hay mensajes</p>
+              <div className="chat-empty"><span aria-hidden="true">•••</span><strong>Inicia la conversación</strong><p>Envía información breve relacionada con la consulta.</p></div>
             )}
             {messages.map((msg, i) => (
               <div key={i} className={`chat-bubble ${msg.own ? 'own' : 'other'}`}>
-                <span className="chat-sender">{msg.own ? 'Tú' : msg.sender}</span>
+                <span className="chat-sender">{msg.own ? 'Tú' : msg.sender}<small>{formatTime(msg.timestamp)}</small></span>
                 <p>{msg.text}</p>
               </div>
             ))}
@@ -76,8 +85,9 @@ export default function InCallChat({ socket, roomId, myName }: Props) {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Escribe un mensaje..."
+              aria-label="Mensaje para el chat de la consulta"
             />
-            <button onClick={sendMessage}>Enviar</button>
+            <button type="button" onClick={sendMessage} disabled={!input.trim()}>Enviar</button>
           </div>
         </div>
       )}

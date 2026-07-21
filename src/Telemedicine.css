@@ -1,0 +1,2377 @@
+.telemedicine-page {
+  --tm-ink: #173b3a;
+  --tm-muted: #617b79;
+  --tm-primary: #08796e;
+  --tm-primary-dark: #05635b;
+  --tm-primary-soft: #dff4ef;
+  --tm-primary-pale: #eef9f6;
+  --tm-surface: #ffffff;
+  --tm-background: #edf7f5;
+  --tm-line: #dce9e6;
+  --tm-danger: #c44952;
+  --tm-danger-dark: #a63740;
+  --tm-warning: #d99a35;
+  --tm-shadow-sm: 0 10px 28px rgba(23, 76, 72, 0.08);
+  --tm-shadow: 0 22px 65px rgba(23, 76, 72, 0.13);
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--tm-ink);
+  background:
+    radial-gradient(circle at 8% 4%, rgba(114, 208, 187, 0.2), transparent 28rem),
+    linear-gradient(145deg, #f8fcfb 0%, var(--tm-background) 55%, #e7f3f0 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.telemedicine-page,
+.telemedicine-page * {
+  box-sizing: border-box;
+}
+
+.telemedicine-page button,
+.telemedicine-page input,
+.telemedicine-page select {
+  font: inherit;
+}
+
+.telemedicine-page button,
+.telemedicine-page a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.telemedicine-page button:focus-visible,
+.telemedicine-page a:focus-visible,
+.telemedicine-page input:focus-visible,
+.telemedicine-page select:focus-visible {
+  outline: 3px solid rgba(8, 121, 110, 0.24);
+  outline-offset: 3px;
+}
+
+.telemedicine-header {
+  position: sticky;
+  z-index: 100;
+  top: 0;
+  border-bottom: 1px solid rgba(220, 233, 230, 0.9);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 30px rgba(23, 76, 72, 0.04);
+  backdrop-filter: blur(20px);
+}
+
+.telemedicine-header__inner {
+  width: min(100% - 40px, 1240px);
+  min-height: 76px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(18px, 3vw, 46px);
+}
+
+.telemedicine-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #164d49;
+  font-size: 1.22rem;
+  font-weight: 780;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.telemedicine-brand > span:last-child > span {
+  color: var(--tm-primary);
+}
+
+.telemedicine-brand__mark {
+  position: relative;
+  width: 37px;
+  height: 37px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #0a8b7e, #087064);
+  box-shadow: 0 9px 20px rgba(8, 121, 110, 0.24);
+}
+
+.telemedicine-brand__mark span {
+  position: absolute;
+  width: 18px;
+  height: 5px;
+  border-radius: 999px;
+  background: white;
+}
+
+.telemedicine-brand__mark span:last-child {
+  transform: rotate(90deg);
+}
+
+.telemedicine-nav {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.telemedicine-nav a {
+  position: relative;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #53716f;
+  font-size: 0.78rem;
+  font-weight: 680;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 180ms ease, background 180ms ease;
+}
+
+.telemedicine-nav a:hover {
+  color: var(--tm-primary-dark);
+  background: var(--tm-primary-pale);
+}
+
+.telemedicine-nav a.is-active {
+  color: var(--tm-primary-dark);
+  background: var(--tm-primary-soft);
+}
+
+.telemedicine-nav a.is-active::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  bottom: 4px;
+  left: 12px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--tm-primary);
+}
+
+.telemedicine-account {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.telemedicine-account__avatar {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 2px solid white;
+  border-radius: 50%;
+  color: white;
+  background: linear-gradient(145deg, #55b8a8, #08796e);
+  box-shadow: 0 0 0 1px var(--tm-line);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.telemedicine-account__copy {
+  max-width: 125px;
+  display: grid;
+  line-height: 1.2;
+}
+
+.telemedicine-account__copy strong {
+  overflow: hidden;
+  color: var(--tm-ink);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.telemedicine-account__copy small {
+  margin-top: 3px;
+  color: var(--tm-muted);
+  font-size: 0.64rem;
+}
+
+.telemedicine-logout,
+.telemedicine-login-link {
+  min-height: 35px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 13px;
+  border: 1px solid var(--tm-line);
+  border-radius: 999px;
+  color: var(--tm-primary-dark);
+  background: white;
+  font-size: 0.7rem;
+  font-weight: 760;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.telemedicine-logout:hover,
+.telemedicine-login-link:hover {
+  border-color: #b6d8d1;
+  background: var(--tm-primary-pale);
+}
+
+.telemedicine-main {
+  width: min(100% - 40px, 1180px);
+  margin: 0 auto;
+  padding-top: clamp(28px, 5vw, 58px);
+}
+
+.telemedicine-hero {
+  position: relative;
+  min-height: 610px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(420px, 0.98fr);
+  align-items: center;
+  gap: clamp(45px, 7vw, 95px);
+  padding: 76px 0 88px;
+}
+
+.telemedicine-hero::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 40px;
+  right: -230px;
+  width: 620px;
+  height: 620px;
+  border: 1px solid rgba(8, 121, 110, 0.08);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 75px rgba(255, 255, 255, 0.14), inset 0 0 0 150px rgba(8, 121, 110, 0.025);
+}
+
+.telemedicine-hero__copy {
+  position: relative;
+  z-index: 2;
+}
+
+.telemedicine-eyebrow,
+.telemedicine-kicker {
+  color: var(--tm-primary);
+  font-size: 0.68rem;
+  font-weight: 820;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.telemedicine-eyebrow {
+  width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid #cce6e0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.telemedicine-eyebrow i,
+.consultation-availability i,
+.waiting-room__status i,
+.patient-card__waiting i,
+.widget-header small i,
+.call-status__live i,
+.call-quality i {
+  width: 7px;
+  height: 7px;
+  display: inline-block;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #1aa681;
+  box-shadow: 0 0 0 4px rgba(26, 166, 129, 0.12);
+}
+
+.telemedicine-hero h1 {
+  max-width: 680px;
+  margin: 23px 0 0;
+  color: #173e3b;
+  font-size: clamp(3.15rem, 5.3vw, 5rem);
+  font-weight: 690;
+  line-height: 1.02;
+  letter-spacing: -0.065em;
+}
+
+.telemedicine-hero h1 span {
+  color: var(--tm-primary);
+}
+
+.telemedicine-hero__copy > p {
+  max-width: 620px;
+  margin: 27px 0 0;
+  color: var(--tm-muted);
+  font-size: 1.02rem;
+  line-height: 1.75;
+}
+
+.telemedicine-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 31px;
+}
+
+.telemedicine-button {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 21px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 780;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.telemedicine-button:hover {
+  transform: translateY(-2px);
+}
+
+.telemedicine-button--primary {
+  color: white;
+  background: linear-gradient(145deg, #0a877b, #076b63);
+  box-shadow: 0 14px 31px rgba(8, 121, 110, 0.23);
+}
+
+.telemedicine-button--primary:hover {
+  box-shadow: 0 17px 36px rgba(8, 121, 110, 0.3);
+}
+
+.telemedicine-button--secondary {
+  border-color: #d2e5e1;
+  color: #315f5a;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.telemedicine-button--secondary:hover {
+  background: white;
+  box-shadow: var(--tm-shadow-sm);
+}
+
+.telemedicine-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 27px;
+  color: #5b7674;
+  font-size: 0.72rem;
+  font-weight: 630;
+}
+
+.telemedicine-trust span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.telemedicine-trust i {
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--tm-primary);
+  background: var(--tm-primary-soft);
+  font-size: 0.65rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.telemedicine-hero__visual {
+  position: relative;
+  z-index: 1;
+  min-height: 445px;
+  display: grid;
+  place-items: center;
+}
+
+.telemedicine-preview {
+  width: min(100%, 520px);
+  overflow: hidden;
+  border: 7px solid rgba(255, 255, 255, 0.9);
+  border-radius: 25px;
+  background: #153b39;
+  box-shadow: 0 35px 90px rgba(22, 73, 68, 0.22);
+  transform: rotate(1.4deg);
+}
+
+.telemedicine-preview__topbar {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 17px;
+  color: white;
+  background: #194844;
+  font-size: 0.65rem;
+}
+
+.telemedicine-preview__topbar > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 760;
+}
+
+.telemedicine-preview__topbar i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5bd1a8;
+  box-shadow: 0 0 0 4px rgba(91, 209, 168, 0.12);
+}
+
+.telemedicine-preview__topbar small {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.telemedicine-preview__stage {
+  position: relative;
+  min-height: 316px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(76, 154, 144, 0.34), transparent 42%),
+    linear-gradient(145deg, #183d3a, #102d2b);
+}
+
+.telemedicine-preview__doctor {
+  display: grid;
+  justify-items: center;
+  color: white;
+}
+
+.telemedicine-preview__doctor > span {
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 13px;
+  border: 4px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  color: white;
+  background: linear-gradient(145deg, #74c8b8, #288d82);
+  box-shadow: 0 17px 40px rgba(0, 0, 0, 0.24);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.telemedicine-preview__doctor strong {
+  font-size: 0.88rem;
+}
+
+.telemedicine-preview__doctor small {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.62rem;
+}
+
+.telemedicine-preview__patient {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  width: 122px;
+  aspect-ratio: 1.25;
+  display: grid;
+  place-items: end start;
+  padding: 9px;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  border-radius: 13px;
+  color: white;
+  background: linear-gradient(145deg, #4a7772, #264c48);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  font-size: 0.55rem;
+  font-weight: 700;
+}
+
+.telemedicine-preview__controls {
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: #173c39;
+}
+
+.telemedicine-preview__controls span {
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.76);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.52rem;
+  font-weight: 700;
+}
+
+.telemedicine-preview__controls span.is-danger {
+  color: white;
+  background: #bb4850;
+}
+
+.telemedicine-security-card {
+  position: absolute;
+  right: -17px;
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border: 1px solid rgba(213, 233, 228, 0.9);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 45px rgba(22, 73, 68, 0.16);
+  backdrop-filter: blur(15px);
+}
+
+.telemedicine-security-card > span {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: white;
+  background: var(--tm-primary);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.telemedicine-security-card div {
+  display: grid;
+}
+
+.telemedicine-security-card strong {
+  font-size: 0.68rem;
+}
+
+.telemedicine-security-card small {
+  margin-top: 2px;
+  color: var(--tm-muted);
+  font-size: 0.55rem;
+}
+
+.consultation-section {
+  scroll-margin-top: 105px;
+  margin-bottom: 44px;
+  padding: clamp(25px, 4vw, 48px);
+  border: 1px solid rgba(213, 231, 227, 0.92);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 25px 75px rgba(23, 76, 72, 0.09);
+  backdrop-filter: blur(18px);
+}
+
+.consultation-section__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--tm-line);
+}
+
+.consultation-section__header h2 {
+  margin: 7px 0 0;
+  color: var(--tm-ink);
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  letter-spacing: -0.045em;
+}
+
+.consultation-section__header p {
+  margin: 8px 0 0;
+  color: var(--tm-muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.consultation-availability {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 13px;
+  border: 1px solid #cde8df;
+  border-radius: 999px;
+  color: #176b5f;
+  background: #effaf6;
+  font-size: 0.68rem;
+  font-weight: 760;
+  white-space: nowrap;
+}
+
+.consultation-workspace {
+  padding-top: 30px;
+}
+
+.consultation-card,
+.precall-form {
+  border: 1px solid var(--tm-line);
+  border-radius: 20px;
+  background: var(--tm-surface);
+  box-shadow: var(--tm-shadow-sm);
+}
+
+.telemedicine-auth {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.82fr) minmax(390px, 1.18fr);
+  overflow: hidden;
+  border: 1px solid var(--tm-line);
+  border-radius: 22px;
+  background: white;
+  box-shadow: var(--tm-shadow-sm);
+}
+
+.telemedicine-auth__intro {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(32px, 5vw, 58px);
+  color: white;
+  background:
+    radial-gradient(circle at 15% 90%, rgba(91, 209, 168, 0.22), transparent 19rem),
+    linear-gradient(145deg, #0c655d, #153f3c);
+}
+
+.telemedicine-auth__intro::after {
+  content: '+';
+  position: absolute;
+  right: -35px;
+  bottom: -85px;
+  color: rgba(255, 255, 255, 0.035);
+  font-size: 18rem;
+  font-weight: 200;
+  line-height: 1;
+}
+
+.telemedicine-auth__icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.11);
+  font-size: 1.8rem;
+  font-weight: 300;
+}
+
+.telemedicine-auth__intro .telemedicine-kicker {
+  color: #8ce0ce;
+}
+
+.telemedicine-auth__intro h3 {
+  max-width: 330px;
+  margin: 10px 0 0;
+  color: white;
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+}
+
+.telemedicine-auth__intro > p {
+  max-width: 380px;
+  margin: 17px 0 0;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.telemedicine-auth__intro ul {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 13px;
+  margin: 31px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.telemedicine-auth__intro li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.telemedicine-auth__intro li span {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #8ce0ce;
+  background: rgba(140, 224, 206, 0.1);
+  font-size: 0.62rem;
+}
+
+.telemedicine-auth__form {
+  padding: clamp(30px, 5vw, 55px);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.telemedicine-auth__heading > span {
+  color: var(--tm-primary);
+  font-size: 0.7rem;
+  font-weight: 760;
+}
+
+.telemedicine-auth__heading h2 {
+  margin: 5px 0 0;
+  color: var(--tm-ink);
+  font-size: 2rem;
+  letter-spacing: -0.045em;
+}
+
+.telemedicine-auth__heading p {
+  margin: 7px 0 0;
+  color: var(--tm-muted);
+  font-size: 0.78rem;
+}
+
+.telemedicine-auth form {
+  display: grid;
+  gap: 17px;
+  margin-top: 27px;
+}
+
+.telemedicine-auth .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+.telemedicine-auth .form-group {
+  display: grid;
+  gap: 7px;
+}
+
+.telemedicine-auth .form-group label,
+.widget-form label {
+  color: #365c59;
+  font-size: 0.69rem;
+  font-weight: 760;
+}
+
+.telemedicine-auth input,
+.telemedicine-auth select,
+.widget-form input {
+  width: 100%;
+  min-height: 47px;
+  padding: 0 13px;
+  border: 1px solid #d6e6e3;
+  border-radius: 11px;
+  color: var(--tm-ink);
+  background: #fbfdfd;
+  font-size: 0.78rem;
+  outline: none;
+  transition: border 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.telemedicine-auth input:focus,
+.telemedicine-auth select:focus,
+.widget-form input:focus {
+  border-color: #71b8ab;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(8, 121, 110, 0.08);
+}
+
+.telemedicine-submit {
+  min-height: 49px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 11px;
+  color: white;
+  background: linear-gradient(145deg, #0a877b, #076b63);
+  box-shadow: 0 12px 25px rgba(8, 121, 110, 0.2);
+  font-size: 0.77rem;
+  font-weight: 780;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.telemedicine-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 15px 30px rgba(8, 121, 110, 0.27);
+}
+
+.telemedicine-submit:disabled {
+  opacity: 0.58;
+  cursor: wait;
+}
+
+.telemedicine-auth__switch {
+  margin: 21px 0 0;
+  color: var(--tm-muted);
+  font-size: 0.73rem;
+  text-align: center;
+}
+
+.telemedicine-page .link-button {
+  padding: 0;
+  border: 0;
+  color: var(--tm-primary);
+  background: transparent;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.telemedicine-page .error-text {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid #f0cdd0;
+  border-radius: 10px;
+  color: #9f3640;
+  background: #fff5f5;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.precall-check {
+  max-width: 790px;
+  margin: 0 auto;
+  padding: clamp(25px, 4vw, 40px);
+}
+
+.precall-check__heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.precall-check__icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  color: var(--tm-primary);
+  background: var(--tm-primary-soft);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.precall-check h2,
+.waiting-room h2,
+.doctor-dashboard h2,
+.call-ended h2 {
+  margin: 6px 0 0;
+  color: var(--tm-ink);
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  letter-spacing: -0.04em;
+}
+
+.precall-check__heading p,
+.doctor-dashboard__header p {
+  margin: 7px 0 0;
+  color: var(--tm-muted);
+  font-size: 0.77rem;
+  line-height: 1.6;
+}
+
+.precall-identity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  margin-top: 27px;
+  padding: 15px;
+  border: 1px solid var(--tm-line);
+  border-radius: 14px;
+  background: #f9fcfb;
+}
+
+.precall-identity__avatar,
+.patient-card__avatar {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: white;
+  background: linear-gradient(145deg, #4bb09f, #08796e);
+  font-size: 0.84rem;
+  font-weight: 820;
+}
+
+.precall-identity > div,
+.patient-card > div {
+  min-width: 0;
+  display: grid;
+}
+
+.precall-identity small,
+.patient-card small {
+  color: var(--tm-muted);
+  font-size: 0.61rem;
+}
+
+.precall-identity strong,
+.patient-card strong {
+  overflow: hidden;
+  margin-top: 2px;
+  color: var(--tm-ink);
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.precall-identity > div > span,
+.patient-card > div > span {
+  margin-top: 3px;
+  color: var(--tm-muted);
+  font-size: 0.65rem;
+}
+
+.precall-identity__verified {
+  padding: 7px 10px;
+  border-radius: 999px;
+  color: #16695e;
+  background: var(--tm-primary-soft);
+  font-size: 0.61rem;
+  font-weight: 760;
+}
+
+.precall-check .checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 18px 0;
+  padding: 15px;
+  border: 1px solid var(--tm-line);
+  border-radius: 14px;
+  background: white;
+  cursor: pointer;
+}
+
+.precall-check .checkbox-group:has(input:checked) {
+  border-color: #9dcec5;
+  background: var(--tm-primary-pale);
+}
+
+.precall-check .checkbox-group input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--tm-primary);
+}
+
+.precall-check .checkbox-group > span {
+  display: grid;
+}
+
+.precall-check .checkbox-group strong {
+  color: var(--tm-ink);
+  font-size: 0.75rem;
+}
+
+.precall-check .checkbox-group small {
+  margin-top: 4px;
+  color: var(--tm-muted);
+  font-size: 0.65rem;
+  line-height: 1.5;
+}
+
+.precall-check > .telemedicine-submit {
+  width: 100%;
+}
+
+.precall-check__privacy {
+  margin: 12px 0 0;
+  color: #78908e;
+  font-size: 0.62rem;
+  text-align: center;
+}
+
+.waiting-room {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: clamp(38px, 7vw, 70px);
+  text-align: center;
+}
+
+.waiting-room__animation {
+  position: relative;
+  width: 94px;
+  height: 94px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 25px;
+}
+
+.waiting-room__animation span {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(8, 121, 110, 0.19);
+  border-radius: 50%;
+  animation: tm-pulse 2s ease-out infinite;
+}
+
+.waiting-room__animation span:nth-child(2) {
+  animation-delay: 0.7s;
+}
+
+.waiting-room__animation i {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  color: white;
+  background: linear-gradient(145deg, #0a8b7e, #087064);
+  box-shadow: 0 15px 35px rgba(8, 121, 110, 0.24);
+  font-size: 2.2rem;
+  font-style: normal;
+  font-weight: 280;
+}
+
+@keyframes tm-pulse {
+  0% { transform: scale(0.55); opacity: 1; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+.waiting-room > p {
+  max-width: 500px;
+  margin: 13px auto 0;
+  color: var(--tm-muted);
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
+.waiting-room__status {
+  width: max-content;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 23px auto 0;
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: #276b63;
+  background: var(--tm-primary-pale);
+  font-size: 0.68rem;
+  font-weight: 720;
+}
+
+.waiting-room > small {
+  display: block;
+  margin-top: 18px;
+  color: #849997;
+  font-size: 0.62rem;
+}
+
+.doctor-dashboard {
+  padding: clamp(25px, 4vw, 38px);
+}
+
+.doctor-dashboard__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--tm-line);
+}
+
+.patient-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  margin-top: 22px;
+  padding: 16px;
+  border: 1px solid #cfe4df;
+  border-radius: 15px;
+  background: #f9fcfb;
+}
+
+.patient-card__waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #5c7774;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.patient-card .telemedicine-submit {
+  min-height: 40px;
+  font-size: 0.68rem;
+}
+
+.doctor-dashboard__empty {
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  margin-top: 22px;
+  border: 1px dashed #c9deda;
+  border-radius: 16px;
+  color: var(--tm-muted);
+  background: #fbfdfd;
+  text-align: center;
+}
+
+.doctor-dashboard__empty > span {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  color: var(--tm-primary);
+  background: var(--tm-primary-soft);
+  font-size: 1.8rem;
+}
+
+.doctor-dashboard__empty strong {
+  color: var(--tm-ink);
+  font-size: 0.83rem;
+}
+
+.doctor-dashboard__empty p {
+  margin: 5px 0 0;
+  font-size: 0.68rem;
+}
+
+.call-ended {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: clamp(40px, 7vw, 65px);
+  text-align: center;
+}
+
+.call-ended > span {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  border-radius: 20px;
+  color: var(--tm-primary);
+  background: var(--tm-primary-soft);
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.call-ended p {
+  margin: 10px 0 23px;
+  color: var(--tm-muted);
+  font-size: 0.78rem;
+}
+
+.video-call {
+  position: relative;
+  padding: 15px;
+  border: 1px solid #d4e5e1;
+  border-radius: 22px;
+  background: #173b39;
+  box-shadow: 0 28px 70px rgba(16, 58, 54, 0.21);
+}
+
+.call-status {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 5px 14px;
+  color: white;
+}
+
+.call-status > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.call-status > div:last-child {
+  justify-content: flex-end;
+}
+
+.call-status strong {
+  font-size: 0.75rem;
+}
+
+.call-status small {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.58rem;
+}
+
+.call-status__live,
+.call-quality {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.59rem;
+  font-weight: 740;
+}
+
+.call-quality--medium i { background: #e4aa47; box-shadow: 0 0 0 4px rgba(228, 170, 71, 0.14); }
+.call-quality--poor i { background: #e36a72; box-shadow: 0 0 0 4px rgba(227, 106, 114, 0.14); }
+.call-quality--unknown i { background: #9bb0ad; box-shadow: 0 0 0 4px rgba(155, 176, 173, 0.13); }
+
+.video-stage {
+  position: relative;
+  min-height: clamp(380px, 58vw, 650px);
+  overflow: hidden;
+  border-radius: 16px;
+  background: #102e2c;
+}
+
+.remote-video {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(63, 126, 119, 0.35), transparent 34%),
+    linear-gradient(145deg, #183e3b, #102c2a);
+}
+
+.remote-video video,
+.local-video video {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.video-placeholder {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.video-placeholder > span {
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 2.5rem;
+  font-weight: 200;
+}
+
+.video-placeholder strong {
+  font-size: 0.72rem;
+}
+
+.local-video {
+  position: absolute;
+  z-index: 4;
+  right: 18px;
+  bottom: 18px;
+  width: min(27%, 235px);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.86);
+  border-radius: 14px;
+  background: #274d49;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
+}
+
+.video-participant-label {
+  position: absolute;
+  z-index: 6;
+  bottom: 12px;
+  left: 12px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  color: white;
+  background: rgba(10, 32, 30, 0.72);
+  backdrop-filter: blur(8px);
+  font-size: 0.56rem;
+  font-weight: 720;
+}
+
+.local-video .video-participant-label {
+  bottom: 7px;
+  left: 7px;
+  padding: 4px 7px;
+}
+
+.camera-off-placeholder {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, #315f5a, #1b423e);
+}
+
+.camera-off-placeholder span {
+  width: 55px;
+  height: 55px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 800;
+}
+
+.call-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 0 1px;
+}
+
+.call-controls button {
+  min-height: 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.call-controls button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.call-controls button > span {
+  width: 23px;
+  height: 23px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 0.58rem;
+  font-weight: 820;
+}
+
+.call-controls button.is-disabled {
+  color: white;
+  background: rgba(196, 73, 82, 0.48);
+}
+
+.call-controls .end-call-btn {
+  border-color: transparent;
+  color: white;
+  background: var(--tm-danger);
+}
+
+.call-controls .end-call-btn:hover {
+  background: var(--tm-danger-dark);
+}
+
+.in-call-chat {
+  position: fixed;
+  z-index: 90;
+  right: 26px;
+  bottom: 105px;
+  width: min(360px, calc(100vw - 30px));
+  overflow: hidden;
+  border: 1px solid #d5e7e3;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 24px 70px rgba(15, 62, 57, 0.22);
+}
+
+.in-call-chat.closed {
+  width: 310px;
+}
+
+.chat-toggle {
+  width: 100%;
+  min-height: 60px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 13px;
+  border: 0;
+  color: var(--tm-ink);
+  background: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chat-toggle__icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--tm-primary);
+  background: var(--tm-primary-soft);
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.chat-toggle > span:nth-child(2) {
+  min-width: 0;
+  display: grid;
+}
+
+.chat-toggle strong {
+  font-size: 0.72rem;
+}
+
+.chat-toggle small {
+  overflow: hidden;
+  margin-top: 3px;
+  color: var(--tm-muted);
+  font-size: 0.57rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-toggle > i {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--tm-primary);
+  background: #f1f8f6;
+  font-style: normal;
+}
+
+.chat-panel {
+  height: min(450px, 61vh);
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--tm-line);
+}
+
+.chat-panel__notice {
+  padding: 8px 12px;
+  color: #6d8381;
+  background: #f7fbfa;
+  font-size: 0.56rem;
+  text-align: center;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 14px;
+  background: #fbfdfd;
+}
+
+.chat-empty,
+.widget-chat-empty {
+  display: grid;
+  justify-items: center;
+  margin: auto;
+  color: var(--tm-muted);
+  text-align: center;
+}
+
+.chat-empty > span,
+.widget-chat-empty > span {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 9px;
+  border-radius: 13px;
+  color: var(--tm-primary);
+  background: var(--tm-primary-soft);
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.chat-empty strong,
+.widget-chat-empty strong {
+  color: var(--tm-ink);
+  font-size: 0.7rem;
+}
+
+.chat-empty p,
+.widget-chat-empty p {
+  max-width: 230px;
+  margin: 4px 0 0;
+  font-size: 0.59rem;
+  line-height: 1.45;
+}
+
+.chat-bubble {
+  max-width: 82%;
+  padding: 9px 11px;
+  border-radius: 13px;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.chat-bubble.own {
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  color: white;
+  background: var(--tm-primary);
+}
+
+.chat-bubble.other {
+  align-self: flex-start;
+  border: 1px solid var(--tm-line);
+  border-bottom-left-radius: 4px;
+  color: var(--tm-ink);
+  background: white;
+}
+
+.chat-sender {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 3px;
+  color: inherit;
+  font-size: 0.53rem;
+  font-weight: 800;
+  opacity: 0.74;
+}
+
+.chat-sender small {
+  font-size: inherit;
+  font-weight: 500;
+}
+
+.chat-bubble p {
+  margin: 0;
+}
+
+.chat-input-row,
+.widget-chat-input {
+  display: flex;
+  gap: 8px;
+  padding: 11px;
+  border-top: 1px solid var(--tm-line);
+  background: white;
+}
+
+.chat-input-row input,
+.widget-chat-input input {
+  min-width: 0;
+  min-height: 40px;
+  flex: 1;
+  padding: 0 12px;
+  border: 1px solid #d7e7e4;
+  border-radius: 10px;
+  color: var(--tm-ink);
+  background: #fbfdfd;
+  font-size: 0.68rem;
+  outline: none;
+}
+
+.chat-input-row input:focus,
+.widget-chat-input input:focus {
+  border-color: #71b8ab;
+  box-shadow: 0 0 0 3px rgba(8, 121, 110, 0.08);
+}
+
+.chat-input-row button,
+.widget-chat-input button,
+.widget-submit {
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  color: white;
+  background: var(--tm-primary);
+  font-size: 0.65rem;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.chat-input-row button:disabled,
+.widget-chat-input button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.contact-fab {
+  position: fixed;
+  z-index: 95;
+  right: 26px;
+  bottom: 25px;
+  min-width: 210px;
+  min-height: 61px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 16px 9px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 999px;
+  color: white;
+  background: linear-gradient(145deg, #0a877b, #076b63);
+  box-shadow: 0 18px 48px rgba(8, 92, 84, 0.3);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.contact-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 55px rgba(8, 92, 84, 0.36);
+}
+
+.contact-fab > span:first-child {
+  width: 41px;
+  height: 41px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: rgba(255, 255, 255, 0.13);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.contact-fab > span:last-child {
+  display: grid;
+  text-align: left;
+}
+
+.contact-fab strong {
+  font-size: 0.69rem;
+}
+
+.contact-fab small {
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.55rem;
+}
+
+.contact-widget {
+  position: fixed;
+  z-index: 96;
+  right: 26px;
+  bottom: 25px;
+  width: min(370px, calc(100vw - 30px));
+  overflow: hidden;
+  border: 1px solid #d4e6e2;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 28px 80px rgba(15, 62, 57, 0.25);
+}
+
+.widget-header {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  color: white;
+  background: linear-gradient(145deg, #0a776d, #15514c);
+}
+
+.widget-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.widget-header > div > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+
+.widget-header h4 {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.widget-header small {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.55rem;
+}
+
+.widget-header small i {
+  width: 6px;
+  height: 6px;
+  box-shadow: none;
+}
+
+.widget-header > button {
+  width: 31px;
+  height: 31px;
+  border: 0;
+  border-radius: 50%;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.widget-body {
+  max-height: min(590px, 72vh);
+  overflow-y: auto;
+}
+
+.widget-menu {
+  display: grid;
+  gap: 8px;
+  padding: 13px;
+}
+
+.menu-option {
+  min-height: 67px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  padding: 10px;
+  border: 1px solid var(--tm-line);
+  border-radius: 13px;
+  color: var(--tm-ink);
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: border 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.menu-option:hover {
+  border-color: #b8d9d2;
+  background: var(--tm-primary-pale);
+  transform: translateX(2px);
+}
+
+.menu-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--tm-primary);
+  background: var(--tm-primary-soft);
+  font-size: 0.68rem;
+  font-weight: 850;
+}
+
+.menu-option > span:nth-child(2) {
+  display: grid;
+}
+
+.menu-option strong {
+  font-size: 0.7rem;
+}
+
+.menu-option small {
+  margin-top: 3px;
+  color: var(--tm-muted);
+  font-size: 0.56rem;
+}
+
+.menu-option > i {
+  color: var(--tm-primary);
+  font-style: normal;
+}
+
+.widget-form {
+  display: grid;
+  gap: 13px;
+  padding: 18px;
+}
+
+.widget-form > div h4 {
+  margin: 5px 0 0;
+  color: var(--tm-ink);
+  font-size: 1.1rem;
+}
+
+.widget-form > div p {
+  margin: 5px 0 3px;
+  color: var(--tm-muted);
+  font-size: 0.62rem;
+}
+
+.widget-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.widget-submit {
+  min-height: 43px;
+}
+
+.widget-chat {
+  height: min(460px, 65vh);
+  display: flex;
+  flex-direction: column;
+}
+
+.widget-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 14px;
+  background: #f9fcfb;
+}
+
+.widget-bubble {
+  max-width: 82%;
+  padding: 9px 11px;
+  border-radius: 13px;
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.widget-bubble.own {
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  color: white;
+  background: var(--tm-primary);
+}
+
+.widget-bubble.other {
+  align-self: flex-start;
+  border: 1px solid var(--tm-line);
+  border-bottom-left-radius: 4px;
+  background: white;
+}
+
+.widget-bubble-sender {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 0.52rem;
+  font-weight: 800;
+  opacity: 0.72;
+}
+
+.widget-bubble p {
+  margin: 0;
+}
+
+.telemedicine-help-strip {
+  min-height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 0 70px;
+  padding: 21px 25px;
+  border: 1px solid #d3e7e2;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.telemedicine-help-strip > div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.telemedicine-help-strip__icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 13px;
+  color: var(--tm-primary);
+  background: var(--tm-primary-soft);
+  font-weight: 850;
+}
+
+.telemedicine-help-strip strong {
+  display: block;
+  font-size: 0.78rem;
+}
+
+.telemedicine-help-strip p {
+  margin: 4px 0 0;
+  color: var(--tm-muted);
+  font-size: 0.66rem;
+}
+
+.telemedicine-help-strip > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--tm-primary);
+  font-size: 0.72rem;
+  font-weight: 780;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.telemedicine-footer {
+  border-top: 1px solid rgba(210, 230, 226, 0.9);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.telemedicine-footer__inner {
+  width: min(100% - 40px, 1180px);
+  min-height: 155px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px 30px;
+  margin: 0 auto;
+  padding: 30px 0;
+}
+
+.telemedicine-brand--footer {
+  font-size: 1rem;
+}
+
+.telemedicine-brand--footer .telemedicine-brand__mark {
+  width: 32px;
+  height: 32px;
+}
+
+.telemedicine-footer p {
+  color: var(--tm-muted);
+  font-size: 0.7rem;
+}
+
+.telemedicine-footer nav {
+  display: flex;
+  gap: 17px;
+}
+
+.telemedicine-footer nav a {
+  color: #4c6e6b;
+  font-size: 0.68rem;
+  font-weight: 680;
+  text-decoration: none;
+}
+
+.telemedicine-footer nav a:hover {
+  color: var(--tm-primary);
+}
+
+.telemedicine-footer small {
+  grid-column: 1 / -1;
+  padding-top: 16px;
+  border-top: 1px solid var(--tm-line);
+  color: #849a98;
+  font-size: 0.58rem;
+}
+
+@media (max-width: 1080px) {
+  .telemedicine-header__inner {
+    grid-template-columns: auto 1fr;
+    gap: 0 20px;
+    padding: 12px 0 0;
+  }
+
+  .telemedicine-account {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .telemedicine-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 7px 0 10px;
+    scrollbar-width: none;
+  }
+
+  .telemedicine-nav::-webkit-scrollbar { display: none; }
+
+  .telemedicine-hero {
+    grid-template-columns: 1fr;
+    padding-top: 65px;
+  }
+
+  .telemedicine-hero__copy {
+    max-width: 750px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .telemedicine-eyebrow,
+  .telemedicine-hero__actions,
+  .telemedicine-trust {
+    margin-right: auto;
+    margin-left: auto;
+    justify-content: center;
+  }
+
+  .telemedicine-hero__copy > p {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .telemedicine-hero__visual {
+    width: min(100%, 650px);
+    margin: -8px auto 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .telemedicine-header__inner,
+  .telemedicine-main,
+  .telemedicine-footer__inner {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .telemedicine-account__copy {
+    display: none;
+  }
+
+  .telemedicine-hero {
+    min-height: auto;
+    padding: 52px 0 62px;
+  }
+
+  .telemedicine-hero h1 {
+    font-size: clamp(2.7rem, 12vw, 4rem);
+  }
+
+  .telemedicine-hero__copy > p {
+    font-size: 0.9rem;
+  }
+
+  .telemedicine-hero__visual {
+    min-height: 390px;
+  }
+
+  .telemedicine-preview__stage {
+    min-height: 275px;
+  }
+
+  .telemedicine-security-card {
+    right: 3px;
+  }
+
+  .consultation-section {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .consultation-section__header,
+  .doctor-dashboard__header {
+    display: grid;
+  }
+
+  .consultation-availability {
+    width: max-content;
+  }
+
+  .telemedicine-auth {
+    grid-template-columns: 1fr;
+  }
+
+  .telemedicine-auth__intro {
+    padding: 34px;
+  }
+
+  .telemedicine-auth__intro ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .telemedicine-auth__intro li {
+    align-items: flex-start;
+    font-size: 0.64rem;
+  }
+
+  .patient-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .patient-card__waiting,
+  .patient-card .telemedicine-submit {
+    grid-column: 1 / -1;
+  }
+
+  .patient-card .telemedicine-submit {
+    width: 100%;
+  }
+
+  .call-status {
+    align-items: flex-start;
+  }
+
+  .call-status > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .call-status > div:last-child {
+    align-items: flex-end;
+  }
+
+  .video-stage {
+    min-height: 480px;
+  }
+
+  .local-video {
+    width: 36%;
+  }
+
+  .telemedicine-help-strip {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .telemedicine-footer__inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .telemedicine-footer .telemedicine-brand,
+  .telemedicine-footer nav {
+    margin: 0 auto;
+  }
+
+  .telemedicine-footer small {
+    grid-column: 1;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 520px) {
+  .telemedicine-header__inner {
+    width: calc(100% - 22px);
+    gap: 0 10px;
+  }
+
+  .telemedicine-brand {
+    font-size: 1.04rem;
+  }
+
+  .telemedicine-brand__mark {
+    width: 33px;
+    height: 33px;
+  }
+
+  .telemedicine-account__avatar {
+    display: none;
+  }
+
+  .telemedicine-logout,
+  .telemedicine-login-link {
+    min-height: 32px;
+    padding: 0 11px;
+  }
+
+  .telemedicine-nav a {
+    padding: 9px 10px;
+    font-size: 0.69rem;
+  }
+
+  .telemedicine-main {
+    width: calc(100% - 24px);
+  }
+
+  .telemedicine-hero {
+    padding-top: 40px;
+  }
+
+  .telemedicine-hero h1 {
+    font-size: clamp(2.45rem, 13.2vw, 3.35rem);
+  }
+
+  .telemedicine-hero__actions {
+    flex-direction: column;
+  }
+
+  .telemedicine-button {
+    width: 100%;
+  }
+
+  .telemedicine-trust {
+    display: grid;
+    justify-content: center;
+  }
+
+  .telemedicine-hero__visual {
+    min-height: 325px;
+  }
+
+  .telemedicine-preview {
+    border-width: 5px;
+    border-radius: 19px;
+  }
+
+  .telemedicine-preview__stage {
+    min-height: 220px;
+  }
+
+  .telemedicine-preview__doctor > span {
+    width: 70px;
+    height: 70px;
+  }
+
+  .telemedicine-preview__patient {
+    width: 92px;
+  }
+
+  .telemedicine-security-card {
+    right: -5px;
+    bottom: -13px;
+  }
+
+  .consultation-section {
+    margin-right: -3px;
+    margin-left: -3px;
+    padding: 17px;
+  }
+
+  .consultation-workspace {
+    padding-top: 22px;
+  }
+
+  .telemedicine-auth__intro {
+    padding: 27px;
+  }
+
+  .telemedicine-auth__intro ul {
+    grid-template-columns: 1fr;
+  }
+
+  .telemedicine-auth__form,
+  .precall-check,
+  .doctor-dashboard {
+    padding: 22px;
+  }
+
+  .telemedicine-auth .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .precall-check__heading {
+    display: grid;
+  }
+
+  .precall-identity {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .precall-identity__verified {
+    grid-column: 1 / -1;
+    width: max-content;
+  }
+
+  .waiting-room {
+    padding: 38px 20px;
+  }
+
+  .video-call {
+    margin: 0 -8px;
+    padding: 9px;
+    border-radius: 17px;
+  }
+
+  .call-status strong,
+  .call-status small {
+    display: none;
+  }
+
+  .video-stage {
+    min-height: 430px;
+    border-radius: 12px;
+  }
+
+  .local-video {
+    right: 10px;
+    bottom: 10px;
+    width: 42%;
+  }
+
+  .video-placeholder strong {
+    max-width: 170px;
+    text-align: center;
+  }
+
+  .call-controls {
+    gap: 7px;
+  }
+
+  .call-controls button {
+    width: 46px;
+    min-height: 46px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0;
+  }
+
+  .call-controls button > span {
+    font-size: 0.62rem;
+  }
+
+  .in-call-chat,
+  .in-call-chat.closed,
+  .contact-widget {
+    right: 12px;
+    width: calc(100vw - 24px);
+  }
+
+  .contact-fab {
+    right: 12px;
+    bottom: 12px;
+    min-width: 0;
+    min-height: 54px;
+    padding: 6px;
+  }
+
+  .contact-fab > span:first-child {
+    width: 40px;
+    height: 40px;
+  }
+
+  .contact-fab > span:last-child {
+    display: none;
+  }
+
+  .in-call-chat {
+    bottom: 76px;
+  }
+
+  .telemedicine-help-strip {
+    margin-bottom: 50px;
+    padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .telemedicine-page *,
+  .telemedicine-page *::before,
+  .telemedicine-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

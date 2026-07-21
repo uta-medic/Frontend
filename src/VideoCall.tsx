@@ -201,80 +201,107 @@ export default function VideoCall() {
 
   if (phase === 'confirm') {
     return (
-      <div className="precall-form">
-        <h2>Antes de la consulta</h2>
+      <section className="precall-form consultation-card precall-check">
+        <div className="precall-check__heading">
+          <span className="precall-check__icon" aria-hidden="true">✓</span>
+          <div>
+            <span className="telemedicine-kicker">Comprobación previa</span>
+            <h2>Antes de entrar a la consulta</h2>
+            <p>Verifica tu identidad y confirma que estás listo para acceder a la sala.</p>
+          </div>
+        </div>
 
-        {authError && <p className="error-text">{authError}</p>}
+        {authError && <p className="error-text" role="alert">{authError}</p>}
 
-        <p>
-          Vas a ingresar como <strong>{user.role === 'doctor' ? 'Doctor' : 'Paciente'}</strong>:{' '}
-          <strong>{user.name}</strong> (CI: {user.ci})
-        </p>
+        <div className="precall-identity">
+          <span className="precall-identity__avatar" aria-hidden="true">{user.name.trim().charAt(0).toUpperCase()}</span>
+          <div><small>Ingresarás como</small><strong>{user.name}</strong><span>{user.role === 'doctor' ? 'Médico' : 'Paciente'} · CI {user.ci}</span></div>
+          <span className="precall-identity__verified">Identidad verificada</span>
+        </div>
 
-        <div className="checkbox-group">
+        <label className="checkbox-group">
           <input
             type="checkbox"
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
           />
-          <label>Acepto iniciar la videoconsulta</label>
-        </div>
+          <span><strong>Acepto iniciar la videoconsulta</strong><small>Confirmo que estoy en un lugar adecuado y autorizo el uso de cámara y micrófono.</small></span>
+        </label>
 
-        <button onClick={submitConfirm}>Continuar</button>
-      </div>
+        <button className="telemedicine-submit" type="button" onClick={submitConfirm}>Continuar a la sala <span aria-hidden="true">→</span></button>
+        <p className="precall-check__privacy">Tu audio y video se utilizan únicamente durante esta consulta.</p>
+      </section>
     );
   }
 
   if (phase === 'waiting') {
     return (
-      <div className="waiting-room">
-        <h2>Sala de espera</h2>
-        <p>Esperando a que el doctor te admita a la consulta...</p>
-      </div>
+      <section className="waiting-room consultation-card" aria-live="polite">
+        <div className="waiting-room__animation"><span /><span /><i>+</i></div>
+        <span className="telemedicine-kicker">Sala de espera</span>
+        <h2>El profesional te atenderá pronto</h2>
+        <p>Permanece en esta pantalla. Entrarás automáticamente cuando el médico admita la consulta.</p>
+        <div className="waiting-room__status"><i /> Conectado y esperando admisión</div>
+        <small>Puedes comprobar tu cámara y micrófono cuando comience la llamada.</small>
+      </section>
     );
   }
 
   if (phase === 'doctor-idle') {
     return (
-      <div className="doctor-dashboard">
-        <h2>Panel del doctor</h2>
+      <section className="doctor-dashboard consultation-card">
+        <header className="doctor-dashboard__header">
+          <div><span className="telemedicine-kicker">Panel médico</span><h2>Pacientes en espera</h2><p>Admite al paciente cuando estés preparado para iniciar.</p></div>
+          <span className="consultation-availability"><i /> Disponible</span>
+        </header>
         {waitingPatient ? (
           <div className="patient-card">
-            <p><strong>{waitingPatient.name}</strong> (CI: {waitingPatient.ci}) está esperando</p>
-            <button onClick={admitPatient}>Admitir a la consulta</button>
+            <span className="patient-card__avatar" aria-hidden="true">{waitingPatient.name.trim().charAt(0).toUpperCase()}</span>
+            <div><small>Paciente en sala</small><strong>{waitingPatient.name}</strong><span>CI {waitingPatient.ci}</span></div>
+            <span className="patient-card__waiting"><i /> Esperando</span>
+            <button className="telemedicine-submit" type="button" onClick={admitPatient}>Admitir a consulta</button>
           </div>
         ) : (
-          <p>Aún no hay pacientes esperando...</p>
+          <div className="doctor-dashboard__empty"><span aria-hidden="true">+</span><strong>Aún no hay pacientes esperando</strong><p>Esta lista se actualizará automáticamente.</p></div>
         )}
-      </div>
+      </section>
     );
   }
 
   if (phase === 'ended') {
-    return <div className="call-ended">La llamada ha finalizado.</div>;
+    return <section className="call-ended consultation-card"><span aria-hidden="true">✓</span><h2>La consulta ha finalizado</h2><p>La conexión de audio y video se cerró correctamente.</p><a href="/" className="telemedicine-button telemedicine-button--secondary">Volver al inicio</a></section>;
   }
 
   // phase === 'in-call'
   const qualityLabel = {
-    good: '🟢 Buena conexión',
-    medium: '🟡 Conexión regular',
-    poor: '🔴 Conexión débil',
-    unknown: '⚪ Midiendo conexión...',
+    good: 'Buena conexión',
+    medium: 'Conexión regular',
+    poor: 'Conexión débil',
+    unknown: 'Midiendo conexión',
   }[quality];
 
   return (
     <div className="video-call">
-      <div className="call-status">
-        <span>{qualityLabel}</span> · <span>Estado: {connectionState}</span>
-      </div>
-      <div className="video-grid">
-        <video ref={localVideoRef} autoPlay muted playsInline width={300} />
-        <video ref={remoteVideoRef} autoPlay playsInline width={300} />
+      <header className="call-status">
+        <div><span className="call-status__live"><i /> En consulta</span><strong>Teleconsulta Utamedic</strong></div>
+        <div><span className={`call-quality call-quality--${quality}`}><i /> {qualityLabel}</span><small>Estado: {connectionState}</small></div>
+      </header>
+      <div className="video-stage">
+        <div className="remote-video">
+          <video ref={remoteVideoRef} autoPlay playsInline />
+          <div className="video-placeholder"><span>+</span><strong>Esperando video del participante</strong></div>
+          <span className="video-participant-label">Participante remoto</span>
+        </div>
+        <div className="local-video">
+          <video ref={localVideoRef} autoPlay muted playsInline />
+          <span className="video-participant-label">Tú</span>
+          {!camOn && <div className="camera-off-placeholder"><span>{user.name.trim().charAt(0).toUpperCase()}</span></div>}
+        </div>
       </div>
       <div className="call-controls">
-        <button onClick={toggleMic}>{micOn ? '🎤 Mutear' : '🔇 Desmutear'}</button>
-        <button onClick={toggleCam}>{camOn ? '📷 Apagar cámara' : '🚫 Encender cámara'}</button>
-        <button onClick={endCall} className="end-call-btn">📞 Colgar</button>
+        <button type="button" className={!micOn ? 'is-disabled' : undefined} onClick={toggleMic} aria-pressed={!micOn}><span aria-hidden="true">{micOn ? 'M' : '×'}</span>{micOn ? 'Silenciar' : 'Activar audio'}</button>
+        <button type="button" className={!camOn ? 'is-disabled' : undefined} onClick={toggleCam} aria-pressed={!camOn}><span aria-hidden="true">{camOn ? 'C' : '×'}</span>{camOn ? 'Apagar cámara' : 'Activar cámara'}</button>
+        <button type="button" onClick={endCall} className="end-call-btn"><span aria-hidden="true">×</span>Finalizar</button>
       </div>
 
       <InCallChat socket={socketRef.current!} roomId={roomIdRef.current} myName={user.name} />

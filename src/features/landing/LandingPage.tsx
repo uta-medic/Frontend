@@ -67,7 +67,7 @@ export function LandingPage() {
         <nav className="landing-nav" aria-label="Navegación principal">
           <a href="#servicios">Servicios</a>
           <a href="#como-funciona">Cómo funciona</a>
-          <Link to="/teleconsulta">Teleconsulta</Link>
+          <a href="#teleconsulta">Teleconsulta</a>
           <a href="#profesionales">Para médicos</a>
         </nav>
 
@@ -190,6 +190,55 @@ export function LandingPage() {
               <li><span>3</span><div><strong>Revisa tus opciones</strong><p>Obtén información organizada para decidir tu próximo paso.</p></div></li>
             </ol>
             <Link className="landing-text-link" to="/asistente">Comenzar ahora <Icon name="arrow" /></Link>
+          </div>
+        </section>
+
+        <section className="landing-teleconsult" id="teleconsulta">
+          <div className="landing-teleconsult__copy">
+            <span className="landing-teleconsult__eyebrow"><i /> Teleconsulta segura</span>
+            <h2>Atención médica cercana,<br /><span>estés donde estés.</span></h2>
+            <p>
+              Conéctate con profesionales de salud mediante una consulta privada,
+              clara y preparada para acompañarte en cada paso.
+            </p>
+            <div className="landing-teleconsult__actions">
+              <Link className="landing-button landing-button--primary" to="/teleconsulta">
+                Iniciar teleconsulta <Icon name="arrow" />
+              </Link>
+              <Link className="landing-button landing-button--ghost" to="/asistente">
+                Resolver una duda primero
+              </Link>
+            </div>
+            <div className="landing-teleconsult__trust">
+              <span><i>✓</i> Comunicación cifrada</span>
+              <span><i>✓</i> Atención desde cualquier lugar</span>
+            </div>
+          </div>
+
+          <div className="landing-teleconsult__visual" aria-hidden="true">
+            <div className="landing-call-preview">
+              <div className="landing-call-preview__topbar">
+                <span><i /> Consulta en curso</span>
+                <small>UtaMedic</small>
+              </div>
+              <div className="landing-call-preview__stage">
+                <div className="landing-call-preview__doctor">
+                  <span>DM</span>
+                  <strong>Dra. Mariana López</strong>
+                  <small>Medicina general</small>
+                </div>
+                <div className="landing-call-preview__patient"><span>Paciente</span></div>
+              </div>
+              <div className="landing-call-preview__controls">
+                <span>Micrófono</span>
+                <span>Cámara</span>
+                <span className="is-danger">Finalizar</span>
+              </div>
+            </div>
+            <div className="landing-call-security">
+              <span>✓</span>
+              <div><strong>Espacio privado</strong><small>Tu consulta está protegida</small></div>
+            </div>
           </div>
         </section>
 

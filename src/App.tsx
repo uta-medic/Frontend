@@ -1,88 +1,123 @@
-import './App.css'
-import VideoCall from './VideoCall'
-import ContactWidget from './ContactWidget'
-import Login from './auth/Login'
-import { useAuth } from './auth/AuthContext'
+import { Link, NavLink } from 'react-router-dom';
+import './Telemedicine.css';
+import VideoCall from './VideoCall';
+import ContactWidget from './ContactWidget';
+import Login from './auth/Login';
+import { useAuth } from './auth/AuthContext';
+
+const navigation = [
+  { to: '/', label: 'Inicio', end: true },
+  { to: '/asistente', label: 'Asistente' },
+  { to: '/gestion', label: 'Gestión' },
+  { to: '/medico/copiloto', label: 'Copiloto médico' },
+  { to: '/teleconsulta', label: 'Teleconsulta' },
+];
+
+function BrandMark() {
+  return (
+    <span className="telemedicine-brand__mark" aria-hidden="true">
+      <span />
+      <span />
+    </span>
+  );
+}
 
 function App() {
   const { user, logout } = useAuth();
 
   return (
     <div className="telemedicine-page">
-      {/* HEADER */}
       <header className="telemedicine-header">
-        <div className="header-inner">
-          <div className="logo">
-            <div className="logo-icon">🏥</div>
-            <div>
-              <span className="logo-title">CloudHealth</span>
-              <span className="logo-sub">La Paz</span>
-            </div>
-          </div>
+        <div className="telemedicine-header__inner">
+          <Link className="telemedicine-brand" to="/" aria-label="Utamedic, volver al inicio">
+            <BrandMark />
+            <span>Uta<span>medic</span></span>
+          </Link>
 
-          <div className="header-hospital">
-            <span className="hospital-badge">🏥</span>
-            <span>Hospital Municipal La Merced</span>
-          </div>
+          <nav className="telemedicine-nav" aria-label="Secciones de Utamedic">
+            {navigation.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) => isActive ? 'is-active' : undefined}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
 
-          {user ? (
-            <div className="header-user">
-              <span className="user-avatar">👤</span>
-              <span>{user.name} ({user.role === 'doctor' ? 'Médico' : 'Paciente'})</span>
-              <button className="link-button" onClick={logout}>Cerrar sesión</button>
-            </div>
-          ) : (
-            <div className="header-user">
-              <span className="user-avatar">👤</span>
-              <span>Invitado</span>
-            </div>
-          )}
+          <div className="telemedicine-account">
+            {user ? (
+              <>
+                <span className="telemedicine-account__avatar" aria-hidden="true">
+                  {user.name.trim().charAt(0).toUpperCase()}
+                </span>
+                <span className="telemedicine-account__copy">
+                  <strong>{user.name}</strong>
+                  <small>{user.role === 'doctor' ? 'Médico' : 'Paciente'}</small>
+                </span>
+                <button className="telemedicine-logout" type="button" onClick={logout}>
+                  Salir
+                </button>
+              </>
+            ) : (
+              <Link className="telemedicine-login-link" to="/teleconsulta#consulta">
+                Ingresar
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 
-      <main className="app-main">
+      <main className="telemedicine-main">
+        <section className="consultation-section" id="consulta">
+          <header className="consultation-section__header">
+            <div>
+              <span className="telemedicine-kicker">Sala virtual</span>
+              <h2>{user ? 'Tu espacio de consulta' : 'Ingresa para comenzar'}</h2>
+              <p>
+                {user
+                  ? 'Comprueba tus datos y prepara tu cámara antes de entrar.'
+                  : 'Accede con tu cuenta o crea una en pocos pasos.'}
+              </p>
+            </div>
+            <span className="consultation-availability"><i /> Servicio disponible</span>
+          </header>
 
-        {/* HERO PERSONALIZADO */}
-        <section className="hero-section">
-          <div className="hero-content">
-            <span className="hero-badge">🏥 Teleconsulta</span>
-
-            <h1>
-              Atención médica digital para los ciudadanos de{' '}
-              <span className="hero-highlight">La Paz</span>
-            </h1>
-
-            <p>
-              Conéctate con profesionales de la salud desde cualquier lugar,
-              de forma segura y eficiente.
-            </p>
+          <div className="consultation-workspace">
+            {user ? <VideoCall /> : <Login />}
           </div>
         </section>
 
-        {user ? <VideoCall /> : <Login />}
-
-        <ContactWidget />
-
-        <div className="ticks"></div>
-
-        <section id="spacer"></section>
-
-        {/* FOOTER PERSONALIZADO */}
-        <footer className="app-footer">
-          <div className="footer-inner">
-            <p>© 2026 CloudHealth La Paz · Todos los derechos reservados</p>
-
-            <div className="footer-links">
-              <a href="#">Términos</a>
-              <a href="#">Privacidad</a>
-              <a href="#">Contacto</a>
-            </div>
+        <section className="telemedicine-help-strip">
+          <div>
+            <span className="telemedicine-help-strip__icon" aria-hidden="true">?</span>
+            <div><strong>¿Necesitas ayuda para conectarte?</strong><p>Nuestro equipo puede orientarte antes de iniciar la llamada.</p></div>
           </div>
-        </footer>
-
+          <Link to="/asistente">Abrir asistente <span aria-hidden="true">→</span></Link>
+        </section>
       </main>
+
+      <ContactWidget />
+
+      <footer className="telemedicine-footer">
+        <div className="telemedicine-footer__inner">
+          <Link className="telemedicine-brand telemedicine-brand--footer" to="/">
+            <BrandMark />
+            <span>Uta<span>medic</span></span>
+          </Link>
+          <p>Salud digital clara, humana y accesible.</p>
+          <nav aria-label="Enlaces de teleconsulta">
+            <Link to="/">Inicio</Link>
+            <Link to="/gestion">Gestión</Link>
+            <Link to="/asistente">Asistente</Link>
+          </nav>
+          <small>© 2026 Utamedic. Una teleconsulta no reemplaza la atención de emergencias.</small>
+        </div>
+      </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
