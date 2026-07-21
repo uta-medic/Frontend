@@ -1,6 +1,7 @@
 import './App.css'
 import VideoCall from './VideoCall'
 import ContactWidget from './ContactWidget'
+import TestFileUpload from './TestFileUpload'  // ← Agrega esta línea
 
 function App() {
   return (
@@ -46,6 +47,9 @@ function App() {
             </p>
           </div>
         </section>
+
+        {/* TEST DE ARCHIVOS MÉDICOS */}
+        <TestFileUpload />  {/* ← Agrega esta línea */}
 
         <VideoCall />
 
