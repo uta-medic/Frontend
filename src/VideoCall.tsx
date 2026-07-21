@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 import InCallChat from './InCallChat';
+import { useAuth } from './auth/AuthContext';
 
 const SIGNALING_URL = import.meta.env.VITE_SIGNALING_URL || 'http://localhost:3000';
-//const SIGNALING_URL = 'https://prewar-crate-demise.ngrok-free.dev'; //'https://prewar-crate-demise.ngrok-free.dev'
 
 function getRoomId(): string {
   const params = new URLSearchParams(window.location.search);
@@ -15,10 +15,11 @@ function getRoomId(): string {
   return generated;
 }
 
-type Phase = 'form' | 'waiting' | 'doctor-idle' | 'in-call' | 'ended';
+type Phase = 'confirm' | 'waiting' | 'doctor-idle' | 'in-call' | 'ended';
 type ConnectionQuality = 'good' | 'medium' | 'poor' | 'unknown';
 
 export default function VideoCall() {
+  const { user, token, logout } = useAuth();
   const roomIdRef = useRef<string>(getRoomId());
   const socketRef = useRef<Socket | null>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
@@ -27,22 +28,21 @@ export default function VideoCall() {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const statsIntervalRef = useRef<number | null>(null);
 
-  const [phase, setPhase] = useState<Phase>('form');
-  const [role, setRole] = useState<'doctor' | 'paciente'>('paciente');
-  const [name, setName] = useState('');
-  const [ci, setCi] = useState('');
+  const [phase, setPhase] = useState<Phase>('confirm');
   const [consent, setConsent] = useState(false);
   const [waitingPatient, setWaitingPatient] = useState<{ name: string; ci: string } | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const [micOn, setMicOn] = useState(true);
   const [camOn, setCamOn] = useState(true);
   const [quality, setQuality] = useState<ConnectionQuality>('unknown');
   const [connectionState, setConnectionState] = useState<string>('idle');
 
-  // Socket persistente durante todo el ciclo de vida (form -> espera -> llamada)
+  // Socket persistente durante todo el ciclo de vida (confirm -> espera -> llamada)
   useEffect(() => {
     const socket = io(SIGNALING_URL, {
       extraHeaders: { 'ngrok-skip-browser-warning': 'true' },
+      auth: { token },
     });
     socketRef.current = socket;
 
@@ -59,10 +59,16 @@ export default function VideoCall() {
       setPhase('ended');
     });
 
+    socket.on('auth-error', (err: { message: string }) => {
+      setAuthError(err.message);
+      // La sesión ya no es válida (token vencido/inválido): cerramos sesión.
+      logout();
+    });
+
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [token]);
 
   // Setup de WebRTC: solo se activa cuando entramos a phase === 'in-call'
   useEffect(() => {
@@ -157,17 +163,14 @@ export default function VideoCall() {
     if (statsIntervalRef.current) window.clearInterval(statsIntervalRef.current);
   }
 
-  function submitForm() {
-    if (!name.trim() || !ci.trim()) {
-      alert('Nombre y CI son obligatorios');
-      return;
-    }
+  function submitConfirm() {
     if (!consent) {
       alert('Debes aceptar para continuar');
       return;
     }
-    socketRef.current?.emit('register-role', { roomId: roomIdRef.current, role, name, ci });
-    setPhase(role === 'doctor' ? 'doctor-idle' : 'waiting');
+    // Ya no mandamos name/ci/role: el backend los toma del JWT verificado.
+    socketRef.current?.emit('register-role', { roomId: roomIdRef.current });
+    setPhase(user?.role === 'doctor' ? 'doctor-idle' : 'waiting');
   }
 
   function admitPatient() {
@@ -191,24 +194,33 @@ export default function VideoCall() {
 
   // ---- Pantallas ----
 
-  if (phase === 'form') {
+  if (!user) {
+    // Salvaguarda: VideoCall solo debería montarse con sesión activa (ver App.tsx)
+    return null;
+  }
+
+  if (phase === 'confirm') {
     return (
       <div className="precall-form">
         <h2>Antes de la consulta</h2>
-        <label>
-          Soy: {' '}
-          <select value={role} onChange={(e) => setRole(e.target.value as 'doctor' | 'paciente')}>
-            <option value="paciente">Paciente</option>
-            <option value="doctor">Doctor</option>
-          </select>
-        </label>
-        <input placeholder="Nombre completo" value={name} onChange={(e) => setName(e.target.value)} />
-        <input placeholder="CI" value={ci} onChange={(e) => setCi(e.target.value)} />
-        <label>
-          <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-          {' '}Acepto iniciar la videoconsulta
-        </label>
-        <button onClick={submitForm}>Continuar</button>
+
+        {authError && <p className="error-text">{authError}</p>}
+
+        <p>
+          Vas a ingresar como <strong>{user.role === 'doctor' ? 'Doctor' : 'Paciente'}</strong>:{' '}
+          <strong>{user.name}</strong> (CI: {user.ci})
+        </p>
+
+        <div className="checkbox-group">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+          />
+          <label>Acepto iniciar la videoconsulta</label>
+        </div>
+
+        <button onClick={submitConfirm}>Continuar</button>
       </div>
     );
   }
@@ -265,7 +277,7 @@ export default function VideoCall() {
         <button onClick={endCall} className="end-call-btn">📞 Colgar</button>
       </div>
 
-      <InCallChat socket={socketRef.current!} roomId={roomIdRef.current} myName={name} />
+      <InCallChat socket={socketRef.current!} roomId={roomIdRef.current} myName={user.name} />
     </div>
   );
 }

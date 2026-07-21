@@ -360,3 +360,18 @@
   flex-direction: column;
   height: 320px;
 }
+
+#---------------------
+.error-text { 
+  color: #d92d20; 
+  font-size: 0.9rem; 
+  margin-top: 4px; 
+}
+.link-button { 
+  background: none; 
+  border: none; 
+  color: #2563eb; 
+  text-decoration: underline; 
+  cursor: pointer; 
+  padding: 0; 
+}
